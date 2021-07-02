@@ -1,0 +1,32 @@
+{
+  "name": "32791690-108b-418c-a908-d25d59290566",
+  "type": "Microsoft.Authorization/roleDefinitions",
+  "apiVersion": "2018-01-01-preview",
+  "properties": {
+    "roleName": "CU-Application-Owner",
+    "description": "Contributor role granted for application/operations team at resource group level",
+    "type": "customRole",
+    "permissions": [
+      {
+        "actions": [
+          "*"
+        ],
+        "notActions": [
+          "Microsoft.Authorization/*/write",
+          "Microsoft.Network/vpnGateways/*",
+          "Microsoft.Network/expressRouteCircuits/*",
+          "Microsoft.Network/vpnSites/*",
+          "Microsoft.Network/routeTables/write",
+          "Microsoft.Network/publicIPAddresses/write",
+          "Microsoft.Network/virtualNetworks/write",
+          "Microsoft.KeyVault/locations/deletedVaults/purge/action"
+        ],
+        "dataActions": [],
+        "notDataActions": []
+      }
+    ],
+    "assignableScopes": [
+      "/"
+    ]
+  }
+}

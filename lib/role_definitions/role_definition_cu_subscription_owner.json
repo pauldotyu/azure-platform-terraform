@@ -1,0 +1,27 @@
+{
+  "name": "23b85338-a98f-4cf6-ace0-df94c42e1981",
+  "type": "Microsoft.Authorization/roleDefinitions",
+  "apiVersion": "2018-01-01-preview",
+  "properties": {
+    "roleName": "CU-Subscription-Owner",
+    "description": "Grants full access to manage all resources, including the ability to assign roles in Azure RBAC except for VPN and ExpressRoute networking resources.",
+    "type": "customRole",
+    "permissions": [
+      {
+        "actions": [
+          "*"
+        ],
+        "notActions": [
+          "Microsoft.Network/vpnGateways/*",
+          "Microsoft.Network/expressRouteCircuits/*",
+          "Microsoft.Network/vpnSites/*"
+        ],
+        "dataActions": [],
+        "notDataActions": []
+      }
+    ],
+    "assignableScopes": [
+      "/"
+    ]
+  }
+}

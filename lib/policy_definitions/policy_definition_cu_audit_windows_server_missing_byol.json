@@ -1,0 +1,44 @@
+{
+  "name": "CU-Audit-Windows-Server-License",
+  "type": "Microsoft.Authorization/policyDefinitions",
+  "apiVersion": "2019-09-01",
+  "properties": {
+    "mode": "Indexed",
+    "description": "Windows Server deployments should take advantage of Azure Hybrid Use Benefit - https://azure.microsoft.com/en-us/pricing/hybrid-benefit/",
+    "displayName": "Contoso Azure Hybrid Use Benefit",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "anyOf": [
+              {
+                "field": "type",
+                "equals": "Microsoft.Compute/virtualMachines"
+              },
+              {
+                "field": "type",
+                "equals": "Microsoft.Compute/virtualMachineScaleSets"
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "field": "Microsoft.Compute/virtualMachines/storageProfile.osDisk.osType",
+                "like": "Windows*"
+              },
+              {
+                "field": "Microsoft.Compute/virtualMachines/licenseType",
+                "notEquals": "Windows_Server"
+              }
+            ]
+          }
+        ]
+      },
+      "then": {
+        "effect": "audit"
+      }
+    },
+    "parameters": {}
+  }
+}

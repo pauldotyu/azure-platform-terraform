@@ -1,0 +1,31 @@
+{
+  "name": "627465ab-f5db-4df2-8ebb-0d9f880553d0",
+  "type": "Microsoft.Authorization/roleDefinitions",
+  "apiVersion": "2018-01-01-preview",
+  "properties": {
+    "roleName": "CU-Security-Operations",
+    "description": "Security administrator role with a horizontal view across the entire Azure estate and the Azure Key Vault purge policy.",
+    "type": "customRole",
+    "permissions": [
+      {
+        "actions": [
+          "*/read",
+          "*/register/action",
+          "Microsoft.KeyVault/locations/deletedVaults/purge/action",
+          "Microsoft.Insights/alertRules/*",
+          "Microsoft.Authorization/policyDefinitions/*",
+          "Microsoft.Authorization/policyAssignments/*",
+          "Microsoft.Authorization/policySetDefinitions/*",
+          "Microsoft.PolicyInsights/*",
+          "Microsoft.Security/*"
+        ],
+        "notActions": [],
+        "dataActions": [],
+        "notDataActions": []
+      }
+    ],
+    "assignableScopes": [
+      "/"
+    ]
+  }
+}

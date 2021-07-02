@@ -1,0 +1,193 @@
+{
+  "name": "CU-Audit-Resource-Groups-Without-Required-Tags",
+  "type": "Microsoft.Authorization/policyDefinitions",
+  "apiVersion": "2019-09-01",
+  "properties": {
+    "mode": "All",
+    "description": "Audit any resource group deployments that do not have the required tags.",
+    "displayName": "Contoso Resource Group tags",
+    "metadata": {
+      "version": "1.0.0",
+      "category": "Tags"
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+          },
+          {
+            "anyOf": [
+              {
+                "field": "[concat('tags[', parameters('tagName1'), ']')]",
+                "exists": "false"
+              },
+              {
+                "field": "[concat('tags[', parameters('tagName2'), ']')]",
+                "exists": "false"
+              },
+              {
+                "field": "[concat('tags[', parameters('tagName2'), ']')]",
+                "notIn": "[parameters('tagValue2')]"
+              },
+              {
+                "field": "[concat('tags[', parameters('tagName3'), ']')]",
+                "exists": "false"
+              },
+              {
+                "field": "[concat('tags[', parameters('tagName3'), ']')]",
+                "notIn": "[parameters('tagValue3')]"
+              },
+              {
+                "field": "[concat('tags[', parameters('tagName4'), ']')]",
+                "exists": "false"
+              },
+              {
+                "field": "[concat('tags[', parameters('tagName4'), ']')]",
+                "notIn": "[parameters('tagValue4')]"
+              },
+              {
+                "field": "[concat('tags[', parameters('tagName5'), ']')]",
+                "exists": "false"
+              },
+              {
+                "field": "[concat('tags[', parameters('tagName5'), ']')]",
+                "notIn": "[parameters('tagValue5')]"
+              }
+            ]
+          }
+        ]
+      },
+      "then": {
+        "effect": "[parameters('effect')]"
+      }
+    },
+    "parameters": {
+      "effect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect",
+          "description": "The effect determines what happens when the policy rule is evaluated to match"
+        },
+        "allowedValues": [
+          "Audit",
+          "Deny",
+          "Disabled"
+        ],
+        "defaultValue": "Audit"
+      },
+      "tagName1": {
+        "type": "String",
+        "metadata": {
+          "displayName": "PO Number Tag"
+        },
+        "defaultValue": "po-number"
+      },
+      "tagName2": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Environment Tag"
+        },
+        "defaultValue": "environment"
+      },
+      "tagValue2": {
+        "type": "Array",
+        "metadata": {
+          "displayName": "Environment Tag Values",
+          "description": "Approved values for the 'environment' tag, such as 'dev', 'test', 'prod'"
+        },
+        "allowedValues": [
+          "dev",
+          "test",
+          "prod",
+          "other"
+        ],
+        "defaultValue": [
+          "dev",
+          "test",
+          "prod",
+          "other"
+        ]
+      },
+      "tagName3": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Mission Tag"
+        },
+        "defaultValue": "mission"
+      },
+      "tagValue3": {
+        "type": "Array",
+        "metadata": {
+          "displayName": "Mission Tag Values",
+          "description": "Approved values for the 'mission' tag, such as 'academic', 'research', 'administrative', 'mixed'"
+        },
+        "allowedValues": [
+          "academic",
+          "research",
+          "administrative",
+          "mixed"
+        ],
+        "defaultValue": [
+          "academic",
+          "research",
+          "administrative",
+          "mixed"
+        ]
+      },
+      "tagName4": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Protection Level Tag"
+        },
+        "defaultValue": "protection-level"
+      },
+      "tagValue4": {
+        "type": "Array",
+        "metadata": {
+          "displayName": "Protection Level Tag Values",
+          "description": "Approved values for the 'protection-level' tag, such as 'p1', 'p2', 'p3', 'p4'"
+        },
+        "allowedValues": [
+          "p1",
+          "p2",
+          "p3",
+          "p4"
+        ],
+        "defaultValue": [
+          "p1",
+          "p2",
+          "p3",
+          "p4"
+        ]
+      },
+      "tagName5": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Availability Level Tag"
+        },
+        "defaultValue": "availability-level"
+      },
+      "tagValue5": {
+        "type": "Array",
+        "metadata": {
+          "displayName": "Availability Level Tag Values",
+          "description": "Approved values for the 'availability-level' tag, such as 'a1', 'a2', 'a3', 'a4'"
+        },
+        "allowedValues": [
+          "a1",
+          "a2",
+          "a3",
+          "a4"
+        ],
+        "defaultValue": [
+          "a1",
+          "a2",
+          "a3",
+          "a4"
+        ]
+      }
+    }
+  }
+}

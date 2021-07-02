@@ -1,0 +1,46 @@
+{
+  "name": "CU-Audit-Storage-With-Public-Blob-Access",
+  "type": "Microsoft.Authorization/policyDefinitions",
+  "apiVersion": "2019-09-01",
+  "properties": {
+    "mode": "Indexed",
+    "description": "Storage accounts should not allow anonymous public read access to containers and blobs - https://docs.microsoft.com/en-us/azure/storage/blobs/anonymous-read-access-prevent",
+    "displayName": "Contoso Storage Account public blob access",
+    "metadata": {
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Storage/storageAccounts"
+          },
+          {
+            "field": "Microsoft.Storage/storageAccounts/allowBlobPublicAccess",
+            "notEquals": "false"
+          }
+        ]
+      },
+      "then": {
+        "effect": "[parameters('effect')]"
+      }
+    },
+    "parameters": {
+      "effect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect",
+          "description": "The effect determines what happens when the policy rule is evaluated to match"
+        },
+        "allowedValues": [
+          "Audit",
+          "Deny",
+          "Disabled"
+        ],
+        "defaultValue": "Audit"
+      }
+    }
+  }
+}

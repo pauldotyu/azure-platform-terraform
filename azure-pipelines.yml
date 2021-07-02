@@ -1,0 +1,123 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  name: Contoso
+  demands:
+    - agent.name -equals devops-1
+
+variables:
+- group: kvdevops1
+
+stages:
+  # - stage: install_tools
+  #   displayName: Install Tools
+  #   jobs:
+  #   - job: install_tools
+  #     displayName: Install Tools
+  #     steps:
+  #     - script: |
+  #         sudo apt-get update
+  #         sudo apt-get install ca-certificates curl apt-transport-https lsb-release gnupg
+  #         curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null
+  #         AZ_REPO=$(lsb_release -cs)
+  #         echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
+  #         sudo apt-get update
+  #         sudo apt-get install azure-cli
+  #       displayName: Install Azure CLI
+  #       name: install_azcli
+  #     - script: |
+  #         curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+  #         sudo apt-add-repository "deb [arch=$(dpkg --print-architecture)] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+  #         sudo apt install terraform
+  #       displayName: Install Terraform
+  #       name: install_terraform
+  - stage: terraform_plan
+    displayName: Terraform Plan
+    condition: eq(variables.destroy, false)
+    jobs: 
+    - job: terraform_plan
+      displayName: Terraform Plan
+      steps:
+      - script: |
+          export ARM_CLIENT_ID=$(client-id) 
+          export ARM_CLIENT_SECRET=$(client-secret)
+          export ARM_SUBSCRIPTION_ID=$(main-subscription-id)
+          export ARM_TENANT_ID=$(tenant-id)
+          terraform init
+          terraform plan -out=$(System.DefaultWorkingDirectory)/$(Build.BuildId).tfplan
+        displayName: Terraform Plan
+        name: terraform_plan
+        condition: eq(variables.destroy, false)
+      - task: PublishPipelineArtifact@1
+        inputs:
+          targetPath: $(System.DefaultWorkingDirectory)/$(Build.BuildId).tfplan
+          artifactName: $(Build.BuildId).tfplan
+        displayName: Publish $(Build.BuildId).tfplan
+        name: publish_plan
+  - stage: terraform_apply
+    condition: and(eq(dependencies.terraform_plan.result, 'Succeeded'), eq(variables.destroy, false))
+    dependsOn: terraform_plan
+    displayName: Terraform Apply
+    jobs:
+    - job: manual_validation
+      displayName: Manual Approval
+      pool: Server
+      steps:
+      - task: ManualValidation@0
+        inputs:
+          notifyUsers: $(notifyUsers)
+          instructions: 'Have you looked at the plan output?'
+    - job: terraform_apply
+      condition: eq(dependencies.manual_validation.result, 'Succeeded')
+      displayName: Terraform Apply
+      dependsOn: 
+        - manual_validation
+      steps:
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          artifactName: $(Build.BuildId).tfplan
+          patterns: '**/$(Build.BuildId).tfplan'
+          path: $(System.DefaultWorkingDirectory)
+        displayName: Download $(Build.BuildId).tfplan
+        name: download_plan
+      - script: |
+          export ARM_CLIENT_ID=$(client-id) 
+          export ARM_CLIENT_SECRET=$(client-secret)
+          export ARM_SUBSCRIPTION_ID=$(main-subscription-id)
+          export ARM_TENANT_ID=$(tenant-id)
+          terraform init
+          terraform apply --auto-approve $(System.DefaultWorkingDirectory)/$(Build.BuildId).tfplan
+        displayName: Terraform Apply
+        name: terraform_apply
+  - stage: terraform_destroy
+    displayName: Terraform Destroy
+    condition: eq(variables.destroy, true)
+    jobs: 
+    - job: manual_validation
+      displayName: Manual Approval
+      pool: Server
+      steps:
+      - task: ManualValidation@0
+        inputs:
+          notifyUsers: $(notifyUsers)
+          instructions: 'Are you sure you want to destroy everything?'
+    - job: terraform_destroy
+      condition: eq(dependencies.manual_validation.result, 'Succeeded')
+      displayName: Terraform Destroy
+      dependsOn: manual_validation
+      steps: 
+      - script: |
+          export ARM_CLIENT_ID=$(client-id) 
+          export ARM_CLIENT_SECRET=$(client-secret)
+          export ARM_SUBSCRIPTION_ID=$(main-subscription-id)
+          export ARM_TENANT_ID=$(tenant-id)
+          terraform init
+          terraform destroy --auto-approve"
+        displayName: Destroy infrastructure
+        name: terraform_destroy

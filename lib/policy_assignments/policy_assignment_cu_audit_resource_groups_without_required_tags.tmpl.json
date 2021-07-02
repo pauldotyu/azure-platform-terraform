@@ -1,0 +1,21 @@
+{
+  "name": "CU-Audit-RGs-Tags",
+  "type": "Microsoft.Authorization/policyAssignments",
+  "apiVersion": "2019-09-01",
+  "properties": {
+    "description": "Denies any resource group deployments that do not have the required tags.",
+    "displayName": "Contoso Resource Group Tags",
+    "notScopes": [],
+    "parameters": {
+      "effect": {
+        "value": "Audit"
+      }
+    },
+    "policyDefinitionId": "${root_scope_resource_id}/providers/Microsoft.Authorization/policyDefinitions/CU-Audit-Resource-Groups-Without-Required-Tags",
+    "scope": "${current_scope_resource_id}"
+  },
+  "location": "${default_location}",
+  "identity": {
+    "type": "None"
+  }
+}
