@@ -6,40 +6,33 @@
 trigger:
 - main
 
-pool:
-  name: Contoso
-  demands:
-    - agent.name -equals devops-1
-
 variables:
 - group: kvdevops1
 
 stages:
-  # - stage: install_tools
-  #   displayName: Install Tools
-  #   jobs:
-  #   - job: install_tools
-  #     displayName: Install Tools
-  #     steps:
-  #     - script: |
-  #         sudo apt-get update
-  #         sudo apt-get install ca-certificates curl apt-transport-https lsb-release gnupg
-  #         curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null
-  #         AZ_REPO=$(lsb_release -cs)
-  #         echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
-  #         sudo apt-get update
-  #         sudo apt-get install azure-cli
-  #       displayName: Install Azure CLI
-  #       name: install_azcli
-  #     - script: |
-  #         curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-  #         sudo apt-add-repository "deb [arch=$(dpkg --print-architecture)] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-  #         sudo apt install terraform
-  #       displayName: Install Terraform
-  #       name: install_terraform
+  - stage: start_aci
+    displayName: Build Prep
+    pool:
+      vmImage: ubuntu-latest
+    jobs:
+    - job: start_aci
+      displayName: Start build agent
+      steps:
+      - task: AzureCLI@2
+        displayName: Start Azure Container Instance
+        inputs:
+          azureSubscription: 'terraform'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: 'az container start -n $(ACINAME) -g $(RGNAME)'
   - stage: terraform_plan
     displayName: Terraform Plan
+    dependsOn: start_aci
     condition: eq(variables.destroy, false)
+    pool:
+      name: Contoso
+      demands:
+        - terraform
     jobs: 
     - job: terraform_plan
       displayName: Terraform Plan
@@ -61,9 +54,12 @@ stages:
         displayName: Publish $(Build.BuildId).tfplan
         name: publish_plan
   - stage: terraform_apply
-    condition: and(eq(dependencies.terraform_plan.result, 'Succeeded'), eq(variables.destroy, false))
-    dependsOn: terraform_plan
     displayName: Terraform Apply
+    dependsOn: terraform_plan
+    pool:
+      name: Contoso
+      demands:
+        - terraform
     jobs:
     - job: manual_validation
       displayName: Manual Approval
@@ -74,7 +70,6 @@ stages:
           notifyUsers: $(notifyUsers)
           instructions: 'Have you looked at the plan output?'
     - job: terraform_apply
-      condition: eq(dependencies.manual_validation.result, 'Succeeded')
       displayName: Terraform Apply
       dependsOn: 
         - manual_validation
@@ -97,10 +92,15 @@ stages:
         name: terraform_apply
   - stage: terraform_destroy
     displayName: Terraform Destroy
+    dependsOn: start_aci
     condition: eq(variables.destroy, true)
+    pool:
+      name: Contoso
+      demands: 
+        - terraform
     jobs: 
     - job: manual_validation
-      displayName: Manual Approval
+      displayName: Approval Gate
       pool: Server
       steps:
       - task: ManualValidation@0
@@ -121,3 +121,22 @@ stages:
           terraform destroy --auto-approve"
         displayName: Destroy infrastructure
         name: terraform_destroy
+  - stage: stop_aci
+    displayName: Build Cleanup
+    dependsOn:
+    - terraform_apply
+    - terraform_destroy
+    condition: or(succeeded('terraform_apply'), succeeded('terraform_destroy'))
+    pool:
+      vmImage: ubuntu-latest
+    jobs:
+    - job: stop_aci
+      displayName: Stop build agent
+      steps:
+      - task: AzureCLI@2
+        displayName: Stop Azure Container Instance
+        inputs:
+          azureSubscription: 'terraform'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: 'az container stop -n $(ACINAME) -g $(RGNAME)'
