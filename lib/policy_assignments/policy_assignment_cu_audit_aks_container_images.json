@@ -11,7 +11,7 @@
         "value": "^.+azurecr.io/.+$"
       }
     },
-    "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/16697877-1118-4fb1-9b65-9898ec2509ec",
+    "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/febd0533-8e55-448f-b837-bd0e06f16469",
     "scope": "${current_scope_resource_id}"
   },
   "location": "${default_location}",
