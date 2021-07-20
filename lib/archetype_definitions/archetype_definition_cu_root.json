@@ -13,7 +13,8 @@
 			"Deny-RSG-Locations",
 			"Deny-Subnet-Without-Nsg",
 			"CU-Audit-CIS",
-			"CU-Audit-Public-Blobs"
+			"CU-Audit-Public-Blobs",
+			"CU-Audit-AKS-Baseline"
 		],
 		"policy_definitions": [
 			"Append-AppService-httpsonly",
