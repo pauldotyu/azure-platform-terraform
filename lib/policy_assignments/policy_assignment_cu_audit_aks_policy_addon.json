@@ -1,0 +1,17 @@
+{
+  "name": "CU-Audit-AKS-Policy",
+  "type": "Microsoft.Authorization/policyAssignments",
+  "apiVersion": "2019-09-01",
+  "properties": {
+    "description": "Azure Policy Add-on for Kubernetes service (AKS) extends Gatekeeper v3, an admission controller webhook for Open Policy Agent (OPA), to apply at-scale enforcements and safeguards on your clusters in a centralized, consistent manner.",
+    "displayName": "Azure Policy Add-on for AKS should be installed and enabled on your clusters",
+    "notScopes": [],
+    "parameters": {},
+    "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/0a15ec92-a229-4763-bb14-0ea34a568f8d",
+    "scope": "${current_scope_resource_id}"
+  },
+  "location": "${default_location}",
+  "identity": {
+    "type": "None"
+  }
+}
