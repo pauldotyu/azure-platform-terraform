@@ -4,7 +4,7 @@
   "apiVersion": "2019-09-01",
   "properties": {
     "description": "Audits any resource deployments that do not have the required tags. This only applies to resources that support tagging.",
-    "displayName": "Contoso Resource Tags",
+    "displayName": "Resource Tags",
     "notScopes": [],
     "parameters": {
       "effect": {

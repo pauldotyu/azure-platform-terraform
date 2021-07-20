@@ -4,7 +4,7 @@
   "apiVersion": "2019-09-01",
   "properties": {
     "description": "This policy denies any deployment of resource types that your organization has not approved to deploy. Only resource types that support 'tags' and 'location' will be affected by this policy. To restrict all resources please duplicate this policy (/providers/Microsoft.Authorization/policyDefinitions/a08ec900-254a-4555-9bf5-e42af04b5c5c) and change the 'mode' to 'All'.",
-    "displayName": "Contoso Deny Resources",
+    "displayName": "Deny Resources",
     "notScopes": [],
     "parameters": {},
     "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/a08ec900-254a-4555-9bf5-e42af04b5c5c",

@@ -4,7 +4,7 @@
   "apiVersion": "2019-09-01",
   "properties": {
     "description": "Policies that address a subset of HITRUST/HPAA",
-    "displayName": "CU-Audit-HIPAAA",
+    "displayName": "HITRUST/HPAA",
     "notScopes": [],
     "parameters": {},
     "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/a169a624-5599-4385-a696-c8d643089fab",

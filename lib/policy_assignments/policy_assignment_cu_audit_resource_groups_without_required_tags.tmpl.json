@@ -4,7 +4,7 @@
   "apiVersion": "2019-09-01",
   "properties": {
     "description": "Denies any resource group deployments that do not have the required tags.",
-    "displayName": "Contoso Resource Group Tags",
+    "displayName": "Resource Group Tags",
     "notScopes": [],
     "parameters": {
       "effect": {

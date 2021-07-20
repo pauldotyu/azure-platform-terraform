@@ -4,7 +4,7 @@
   "apiVersion": "2019-09-01",
   "properties": {
     "description": "Storage accounts should not allow public Blobs",
-    "displayName": "Contoso Storage Account public blob access",
+    "displayName": "Audit Storage Accounts with public blob access",
     "notScopes": [],
     "parameters": {
       "effect": {

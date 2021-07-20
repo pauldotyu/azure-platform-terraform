@@ -4,7 +4,7 @@
   "apiVersion": "2019-09-01",
   "properties": {
     "description": "Policies that address a subset of CIS 1.1 requirements",
-    "displayName": "Contoso CIS 1.1",
+    "displayName": "CIS 1.1",
     "notScopes": [],
     "parameters": {},
     "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/1a5bb27d-173f-493e-9568-eb56638dde4d",
