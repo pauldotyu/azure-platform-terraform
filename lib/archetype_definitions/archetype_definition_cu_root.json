@@ -14,11 +14,16 @@
 			"Deny-Subnet-Without-Nsg",
 			"CU-Audit-CIS",
 			"CU-Audit-Public-Blobs",
-			"CU-Audit-AKS-Baseline",
-			"CU-Audit-AKS-Policy",
 			"CU-Audit-AKS-Auth-IPs",
+			"CU-Audit-AKS-Baseline",
 			"CU-Audit-AKS-Defender",
-			"CU-Audit-AKS-RBAC"
+			"CU-Audit-AKS-Images",
+			"CU-Audit-AKS-Internal-LB",
+			"CU-Audit-AKS-HTTPS",
+			"CU-Audit-AKS-Policy",
+			"CU-Audit-AKS-RBAC",
+			"CU-Audit-AKS-Version",
+			"CU-Audit-AKS-Volume-Type"
 		],
 		"policy_definitions": [
 			"Append-AppService-httpsonly",
