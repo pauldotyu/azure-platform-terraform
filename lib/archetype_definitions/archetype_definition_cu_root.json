@@ -17,7 +17,8 @@
 			"CU-Audit-AKS-Baseline",
 			"CU-Audit-AKS-Policy",
 			"CU-Audit-AKS-Auth-IPs",
-			"CU-Audit-AKS-Defender"
+			"CU-Audit-AKS-Defender",
+			"CU-Audit-AKS-RBAC"
 		],
 		"policy_definitions": [
 			"Append-AppService-httpsonly",
