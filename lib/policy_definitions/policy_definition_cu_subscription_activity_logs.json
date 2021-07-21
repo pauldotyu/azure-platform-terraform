@@ -1,0 +1,195 @@
+{
+  "name": "Deploy-Activity-Log-Alerts",
+  "type": "Microsoft.Authorization/policyDefinitions",
+  "apiVersion": "2019-09-01",
+  "properties": {
+    "mode": "Indexed",
+    "description": "This policy deploys activity log alerts for specific Administrative operations.",
+    "displayName": "Activity log alert for specific Administrative operations",
+    "metadata": {
+      "version": "1.0.0",
+      "category": "Monitoring"
+    },
+    "parameters": {
+      "effect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect",
+          "description": "Enable or disable the execution of the policy"
+        },
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "defaultValue": "DeployIfNotExists"
+      },
+      "actionGroupName": {
+        "type": "string",
+        "defaultValue": "adminOpsActionGroup",
+        "minLength": 1,
+        "metadata": {
+          "description": "Name for the Action group."
+        }
+      },
+      "actionGroupShortName": {
+        "type": "string",
+        "defaultValue": "adminOpsAG",
+        "minLength": 1,
+        "maxLength": 12,
+        "metadata": {
+          "description": "Short name for the Action group."
+        }
+      },
+      "emailAddress": {
+        "type": "string",
+        "metadata": {
+          "description": "Email address."
+        }
+      },
+      "activityLogAlertName": {
+        "type": "string",
+        "defaultValue": "adminOpsAlert",
+        "minLength": 1,
+        "metadata": {
+          "description": "Name for the Activity log alert."
+        }
+      },
+      "operationName": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Operation Name",
+          "description": "Administrative Operation name for which activity log alert should be configured"
+        },
+        "allowedValues": [
+          "Microsoft.Sql/servers/firewallRules/write",
+          "Microsoft.Sql/servers/firewallRules/delete",
+          "Microsoft.Network/networkSecurityGroups/write",
+          "Microsoft.Network/networkSecurityGroups/delete",
+          "Microsoft.ClassicNetwork/networkSecurityGroups/write",
+          "Microsoft.ClassicNetwork/networkSecurityGroups/delete",
+          "Microsoft.Network/networkSecurityGroups/securityRules/write",
+          "Microsoft.Network/networkSecurityGroups/securityRules/delete",
+          "Microsoft.ClassicNetwork/networkSecurityGroups/securityRules/write",
+          "Microsoft.ClassicNetwork/networkSecurityGroups/securityRules/delete"
+        ]
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Resources/subscriptions"
+          }
+        ]
+      },
+      "then": {
+        "effect": "[parameters('effect')]",
+        "details": {
+          "type": "Microsoft.Insights/activityLogAlerts",
+          "deploymentScope": "Subscription",
+          "existenceScope": "Subscription",
+          "name": "[parameters('activityLogAlertName')]",
+          "deployment": {
+            "location": "Global",
+            "properties": {
+              "mode": "Incremental",
+              "parameters": {
+                "actionGroupName": {
+                  "value": "[parameters('actionGroupName')]"
+                },
+                "actionGroupShortName": {
+                  "value": "[parameters('actionGroupShortName')]"
+                },
+                "emailAddress": {
+                  "value": "[parameters('emailAddress')]"
+                },
+                "activityLogAlertName": {
+                  "value": "[parameters('activityLogAlertName')]"
+                },
+                "operationName": {
+                  "value": "[parameters('operationName')]"
+                }
+              },
+              "template": {
+                "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                "contentVersion": "1.0.0.0",
+                "parameters": {
+                  "actionGroupName": {
+                    "type": "string"
+                  },
+                  "actionGroupShortName": {
+                    "type": "string"
+                  },
+                  "emailAddress": {
+                    "type": "string"
+                  },
+                  "activityLogAlertName": {
+                    "type": "string"
+                  }
+                },
+                "variables": {},
+                "resources": [
+                  {
+                    "type": "Microsoft.Insights/actionGroups",
+                    "apiVersion": "2019-06-01",
+                    "name": "[parameters('actionGroupName')]",
+                    "location": "[deployment().location]",
+                    "properties": {
+                      "groupShortName": "[parameters('actionGroupShortName')]",
+                      "enabled": true,
+                      "emailReceivers": [
+                        {
+                          "name": "emailReceiver",
+                          "emailAddress": "[parameters('emailAddress')]"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "type": "microsoft.insights/activityLogAlerts",
+                    "apiVersion": "2020-10-01",
+                    "name": "[parameters('activityLogAlertName')]",
+                    "location": "[deployment().location]",
+                    "properties": {
+                      "enabled": true,
+                      "scopes": [
+                        "[subscription().id]"
+                      ],
+                      "condition": {
+                        "allOf": [
+                          {
+                            "field": "category",
+                            "equals": "Administrative"
+                          },
+                          {
+                            "field": "operationName",
+                            "equals": "[parameters('operationName')]"
+                          }
+                        ]
+                      },
+                      "actions": {
+                        "actionGroups": [
+                          {
+                            "actionGroupId": "[resourceId('Microsoft.Insights/actionGroups', parameters('actionGroupName'))]"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "existenceScope": "subscription",
+            "roleDefinitionIds": [
+              "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
+              "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
+            ],
+            "name": "setByPolicy",
+            "type": "Microsoft.Insights/activityLogAlerts"
+          }
+        }
+      }
+    }
+  }
+}

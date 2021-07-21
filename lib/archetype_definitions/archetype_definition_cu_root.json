@@ -160,7 +160,8 @@
 			"CU-Audit-Storage-With-Public-Blob-Access",
 			"CU-Audit-Windows-Server-License",
 			"CU-Audit-Resource-Groups-Without-Required-Tags",
-			"CU-Audit-Resources-Without-Required-Tags"
+			"CU-Audit-Resources-Without-Required-Tags",
+			"Deploy-Activity-Log-Alerts"
 		],
 		"policy_set_definitions": [
 			"Deny-PublicEndpoints",
