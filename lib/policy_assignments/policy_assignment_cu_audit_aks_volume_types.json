@@ -4,7 +4,7 @@
   "apiVersion": "2019-09-01",
   "properties": {
     "description": "Pods can only use allowed volume types in a Kubernetes cluster. This recommendation is part of Pod Security Policies which are intended to improve the security of your Kubernetes environments. This policy is generally available for Kubernetes Service (AKS), and preview for AKS Engine and Azure Arc enabled Kubernetes. For more information, see https://aka.ms/kubepolicydoc and https://kubernetes.io/docs/concepts/storage/volumes/.",
-    "displayName": "Audit AKS volume types",
+    "displayName": "Audit-AKS volume types",
     "notScopes": [],
     "parameters": {
       "allowedVolumeTypes": {

@@ -4,7 +4,7 @@
   "apiVersion": "2019-09-01",
   "properties": {
     "description": "Windows Server deployments should take advantage of Azure Hybrid Use Benefit - https://azure.microsoft.com/en-us/pricing/hybrid-benefit/.",
-    "displayName": "Azure Hybrid Use Benefit",
+    "displayName": "Audit-Azure Hybrid Use Benefit",
     "notScopes": [],
     "parameters": {},
     "policyDefinitionId": "${root_scope_resource_id}/providers/Microsoft.Authorization/policyDefinitions/CU-Audit-Windows-Server-License",

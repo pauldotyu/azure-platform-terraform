@@ -4,7 +4,7 @@
   "apiVersion": "2019-09-01",
   "properties": {
     "description": "Use images from trusted registries to reduce the Kubernetes cluster's exposure risk to unknown vulnerabilities, security issues and malicious images. This policy is generally available for Kubernetes Service (AKS), and preview for AKS Engine and Azure Arc enabled Kubernetes. For more information, see https://aka.ms/kubepolicydoc.",
-    "displayName": "Audit AKS allowed images",
+    "displayName": "Audit-AKS allowed images",
     "notScopes": [],
     "parameters": {
       "allowedContainerImagesRegex": {

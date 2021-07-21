@@ -1,7 +1,8 @@
 {
 	"cu_sde_hipaa": {
 		"policy_assignments": [
-			"CU-Audit-HIPAA"
+			"CU-Audit-HIPAA",
+			"CU-Deploy-Activity-Logs"
 		],
 		"policy_definitions": [],
 		"policy_set_definitions": [],

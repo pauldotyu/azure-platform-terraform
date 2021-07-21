@@ -62,6 +62,15 @@ module "enterprise_scale" {
             workspaceId                                                   = local.secops_log_analytics_workspace_id
             listOfLocations                                               = local.allowed_locations
           }
+
+          CU-Deploy-Activity-Logs = {
+            effect               = "DeployIfNotExists"
+            actionGroupName      = "secopsag"
+            actionGroupShortName = "secopsag"
+            emailAddress         = "pauyu@microsoft.com"
+            activityLogAlertName = "NSG Deleted!"
+            operationName        = "Microsoft.Network/networkSecurityGroups/delete"
+          }
         }
         access_control = {}
       }
@@ -91,7 +100,7 @@ module "enterprise_scale" {
       archetype_id = "cu_root"
       parameters = {
         Deny-Resource-Locations = {
-          listOfAllowedLocations = concat(["global"],local.allowed_locations)
+          listOfAllowedLocations = concat(["global"], local.allowed_locations)
         }
 
         Deny-RSG-Locations = {

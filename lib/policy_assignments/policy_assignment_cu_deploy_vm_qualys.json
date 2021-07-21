@@ -4,7 +4,7 @@
   "apiVersion": "2019-09-01",
   "properties": {
     "description": "Azure Defender includes vulnerability scanning for your machines at no extra cost. You don't need a Qualys license or even a Qualys account - everything's handled seamlessly inside Security Center. When you enable this policy, Azure Defender automatically deploys the Qualys vulnerability assessment agent to all supported machines that don't already have it installed.",
-    "displayName": "Configure machines to receive a vulnerability assessment agent",
+    "displayName": "Deploy-Configure machines to receive a vulnerability assessment agent",
     "notScopes": [],
     "parameters": {
       "effect": {

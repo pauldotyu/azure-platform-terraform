@@ -3,8 +3,8 @@
   "type": "Microsoft.Authorization/policyAssignments",
   "apiVersion": "2019-09-01",
   "properties": {
-    "description": "Denies any resource group deployments that do not have the required tags.",
-    "displayName": "Resource Group Tags",
+    "description": "Audit any resource group deployments that do not have the required tags.",
+    "displayName": "Audit-Resource Group Tags",
     "notScopes": [],
     "parameters": {
       "effect": {

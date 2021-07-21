@@ -4,7 +4,7 @@
   "apiVersion": "2019-09-01",
   "properties": {
     "description": "This initiative includes audit and virtual machine extension policies that address a subset of NIST SP 800-171 R2 requirements. Additional policies will be added in upcoming releases. For more information, visit https://aka.ms/nist800171r2-blueprint.",
-    "displayName": "NIST SP 800-171 R2",
+    "displayName": "Audit-NIST SP 800-171 R2",
     "notScopes": [],
     "parameters": {},
     "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/03055927-78bd-4236-86c0-f36125a10dc9",
