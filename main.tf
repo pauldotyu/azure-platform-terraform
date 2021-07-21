@@ -68,7 +68,7 @@ module "enterprise_scale" {
             actionGroupName      = "secopsag"
             actionGroupShortName = "secopsag"
             emailAddress         = "pauyu@microsoft.com"
-            activityLogAlertName = "NSG Deleted!"
+            activityLogAlertName = "NSGDeleted"
             operationName        = "Microsoft.Network/networkSecurityGroups/delete"
           }
         }
