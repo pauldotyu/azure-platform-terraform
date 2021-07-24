@@ -1,142 +1,180 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
 - main
 
 variables:
+# Secrets pull from key vault
 - group: kvdevops1
+# Current organization url
+- name: AZDO-URL
+  value: $(System.TeamFoundationCollectionUri)
+# Needs to be created ahead of time
+- name: AZDO-POOL
+  value: Contoso
+# Resource group where ACI will be created
+- name: AZP-RG-NAME
+  value: rg-devops
+# Name of ACI agent
+- name: AZP-AGENT-NAME
+  value: $(System.TeamProject)-$(Build.BuildId)
+# Virtual network where ACI will be created
+- name: AZP-VNET-NAME
+  value: vn-devops
+# Subnet where ACI will be created - must be delegated to Microsoft.ContainerInstance/containerGroups
+- name: AZP-SNET-NAME
+  value: ACISubnet
+# Container image that will be used for ACI agent
+- name: ACR-IMAGE
+  value: contosocr.azurecr.io/azpcontoso:latest
+# Container registry - credentials are pulled through key vault
+- name: ACR-SERVER
+  value: contosocr.azurecr.io
 
 stages:
-  - stage: start_aci
-    displayName: Build Prep
-    pool:
-      vmImage: ubuntu-latest
-    jobs:
-    - job: start_aci
-      displayName: Start build agent
-      steps:
-      - task: AzureCLI@2
-        displayName: Start Azure Container Instance
-        inputs:
-          azureSubscription: 'terraform'
-          scriptType: 'bash'
-          scriptLocation: 'inlineScript'
-          inlineScript: 'az container start -n $(ACINAME) -g $(RGNAME)'
-  - stage: terraform_plan
+- stage: start_agent
+  displayName: Build Prep
+  pool:
+    vmImage: ubuntu-latest
+  jobs:
+  - job: start_agent
+    displayName: Create build agent
+    steps:
+    - task: AzureCLI@2
+      displayName: Create Azure Container Instance
+      inputs:
+        azureSubscription: 'terraform'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az container create \
+            -g $(AZP-RG-NAME) \
+            -n $(AZP-AGENT-NAME) \
+            --image $(ACR-IMAGE) \
+            --registry-login-server $(ACR-SERVER) \
+            --registry-username $(contosocr-pull-usr) \
+            --registry-password $(contosocr-pull-pwd) \
+            --assign-identity $(azp-managed-identity-id) \
+            --ip-address Private \
+            --vnet $(AZP-VNET-NAME) \
+            --subnet $(AZP-SNET-NAME) \
+            --restart-policy never \
+            --cpu 1 \
+            --memory 1 \
+            --os-type Linux \
+            -e AZP_URL=$(AZDO-URL) AZP_AGENT_NAME=$(AZP-AGENT-NAME) AZP_POOL=$(AZDO-POOL) \
+            --secure-environment-variables AZP_TOKEN=$(devops-pat)
+- stage: terraform_plan
+  displayName: Terraform Plan
+  dependsOn: start_agent
+  condition: and(succeeded(), eq(variables.destroy, false))
+  pool:
+    name: Contoso
+    demands:
+      - terraform
+  jobs:
+  - job: terraform_plan
     displayName: Terraform Plan
-    dependsOn: start_aci
-    condition: eq(variables.destroy, false)
-    pool:
-      name: Contoso
-      demands:
-        - terraform
-    jobs: 
-    - job: terraform_plan
+    steps:
+    - script: |
+        export ARM_CLIENT_ID=$(client-id)
+        export ARM_CLIENT_SECRET=$(client-secret)
+        export ARM_SUBSCRIPTION_ID=$(main-subscription-id)
+        export ARM_TENANT_ID=$(tenant-id)
+        terraform init
+        terraform plan -out=$(System.DefaultWorkingDirectory)/$(Build.BuildId).tfplan
       displayName: Terraform Plan
-      steps:
-      - script: |
-          export ARM_CLIENT_ID=$(client-id) 
-          export ARM_CLIENT_SECRET=$(client-secret)
-          export ARM_SUBSCRIPTION_ID=$(main-subscription-id)
-          export ARM_TENANT_ID=$(tenant-id)
-          terraform init
-          terraform plan -out=$(System.DefaultWorkingDirectory)/$(Build.BuildId).tfplan
-        displayName: Terraform Plan
-        name: terraform_plan
-        condition: eq(variables.destroy, false)
-      - task: PublishPipelineArtifact@1
-        inputs:
-          targetPath: $(System.DefaultWorkingDirectory)/$(Build.BuildId).tfplan
-          artifactName: $(Build.BuildId).tfplan
-        displayName: Publish $(Build.BuildId).tfplan
-        name: publish_plan
-  - stage: terraform_apply
+      name: terraform_plan
+      condition: eq(variables.destroy, false)
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: $(System.DefaultWorkingDirectory)/$(Build.BuildId).tfplan
+        artifactName: $(Build.BuildId).tfplan
+      displayName: Publish $(Build.BuildId).tfplan
+      name: publish_plan
+- stage: terraform_apply
+  displayName: Terraform Apply
+  dependsOn: terraform_plan
+  condition: succeeded()
+  pool:
+    name: Contoso
+    demands:
+      - terraform
+  jobs:
+  - job: manual_validation
+    displayName: Manual Approval
+    pool: Server
+    steps:
+    - task: ManualValidation@0
+      inputs:
+        notifyUsers: $(notifyUsers)
+        instructions: 'Have you looked at the plan output?'
+  - job: terraform_apply
     displayName: Terraform Apply
-    dependsOn: terraform_plan
-    pool:
-      name: Contoso
-      demands:
-        - terraform
-    jobs:
-    - job: manual_validation
-      displayName: Manual Approval
-      pool: Server
-      steps:
-      - task: ManualValidation@0
-        inputs:
-          notifyUsers: $(notifyUsers)
-          instructions: 'Have you looked at the plan output?'
-    - job: terraform_apply
-      displayName: Terraform Apply
-      dependsOn: 
-        - manual_validation
-      steps:
-      - task: DownloadPipelineArtifact@2
-        inputs:
-          artifactName: $(Build.BuildId).tfplan
-          patterns: '**/$(Build.BuildId).tfplan'
-          path: $(System.DefaultWorkingDirectory)
-        displayName: Download $(Build.BuildId).tfplan
-        name: download_plan
-      - script: |
-          export ARM_CLIENT_ID=$(client-id) 
-          export ARM_CLIENT_SECRET=$(client-secret)
-          export ARM_SUBSCRIPTION_ID=$(main-subscription-id)
-          export ARM_TENANT_ID=$(tenant-id)
-          terraform init
-          terraform apply --auto-approve $(System.DefaultWorkingDirectory)/$(Build.BuildId).tfplan
-        displayName: Terraform Apply
-        name: terraform_apply
-  - stage: terraform_destroy
-    displayName: Terraform Destroy
-    dependsOn: start_aci
-    condition: eq(variables.destroy, true)
-    pool:
-      name: Contoso
-      demands: 
-        - terraform
-    jobs: 
-    - job: manual_validation
-      displayName: Approval Gate
-      pool: Server
-      steps:
-      - task: ManualValidation@0
-        inputs:
-          notifyUsers: $(notifyUsers)
-          instructions: 'Are you sure you want to destroy everything?'
-    - job: terraform_destroy
-      condition: eq(dependencies.manual_validation.result, 'Succeeded')
-      displayName: Terraform Destroy
-      dependsOn: manual_validation
-      steps: 
-      - script: |
-          export ARM_CLIENT_ID=$(client-id) 
-          export ARM_CLIENT_SECRET=$(client-secret)
-          export ARM_SUBSCRIPTION_ID=$(main-subscription-id)
-          export ARM_TENANT_ID=$(tenant-id)
-          terraform init
-          terraform destroy --auto-approve"
-        displayName: Destroy infrastructure
-        name: terraform_destroy
-  - stage: stop_aci
-    displayName: Build Cleanup
     dependsOn:
-    - terraform_apply
-    - terraform_destroy
-    condition: or(succeeded('terraform_apply'), succeeded('terraform_destroy'))
-    pool:
-      vmImage: ubuntu-latest
-    jobs:
-    - job: stop_aci
-      displayName: Stop build agent
-      steps:
-      - task: AzureCLI@2
-        displayName: Stop Azure Container Instance
-        inputs:
-          azureSubscription: 'terraform'
-          scriptType: 'bash'
-          scriptLocation: 'inlineScript'
-          inlineScript: 'az container stop -n $(ACINAME) -g $(RGNAME)'
+      - manual_validation
+    steps:
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        artifactName: $(Build.BuildId).tfplan
+        patterns: '**/$(Build.BuildId).tfplan'
+        path: $(System.DefaultWorkingDirectory)
+      displayName: Download $(Build.BuildId).tfplan
+      name: download_plan
+    - script: |
+        export ARM_CLIENT_ID=$(client-id)
+        export ARM_CLIENT_SECRET=$(client-secret)
+        export ARM_SUBSCRIPTION_ID=$(main-subscription-id)
+        export ARM_TENANT_ID=$(tenant-id)
+        terraform init
+        terraform apply --auto-approve $(System.DefaultWorkingDirectory)/$(Build.BuildId).tfplan
+      displayName: Terraform Apply
+      name: terraform_apply
+- stage: terraform_destroy
+  displayName: Terraform Destroy
+  dependsOn: start_agent
+  condition: and(succeeded(), eq(variables.destroy, true))
+  pool:
+    name: Contoso
+    demands:
+      - terraform
+  jobs:
+  - job: manual_validation
+    displayName: Approval Gate
+    pool: Server
+    steps:
+    - task: ManualValidation@0
+      inputs:
+        notifyUsers: $(notifyUsers)
+        instructions: 'Are you sure you want to destroy everything?'
+  - job: terraform_destroy
+    condition: eq(dependencies.manual_validation.result, 'Succeeded')
+    displayName: Terraform Destroy
+    dependsOn: manual_validation
+    steps:
+    - script: |
+        export ARM_CLIENT_ID=$(client-id)
+        export ARM_CLIENT_SECRET=$(client-secret)
+        export ARM_SUBSCRIPTION_ID=$(main-subscription-id)
+        export ARM_TENANT_ID=$(tenant-id)
+        terraform init
+        terraform destroy --auto-approve"
+      displayName: Destroy infrastructure
+      name: terraform_destroy
+- stage: stop_agent
+  displayName: Build Cleanup
+  dependsOn:
+  - terraform_apply
+  - terraform_destroy
+  condition: or(succeeded('terraform_apply'), succeeded('terraform_destroy'))
+  pool:
+    vmImage: ubuntu-latest
+  jobs:
+  - job: stop_agent
+    displayName: Delete build agent
+    steps:
+    - task: AzureCLI@2
+      displayName: Delete Azure Container Instance
+      inputs:
+        azureSubscription: 'terraform'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: 'az container delete -n $(AZP-AGENT-NAME) -g $(AZP-RG-NAME) -y'
