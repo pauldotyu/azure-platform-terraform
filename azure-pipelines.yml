@@ -177,4 +177,5 @@ stages:
         azureSubscription: 'terraform'
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
-        inlineScript: 'az container delete -n $[lower(variables['AZP-AGENT-NAME'])] -g $(AZP-RG-NAME) -y'
+        inlineScript: |
+          az container delete -n $[lower(variables['AZP-AGENT-NAME'])] -g $(AZP-RG-NAME) -y
