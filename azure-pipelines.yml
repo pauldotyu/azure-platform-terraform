@@ -15,7 +15,7 @@ variables:
   value: rg-devops
 # Name of ACI agent
 - name: AZP-AGENT-NAME
-  value: ${{ lower(System.TeamProject) }}-$(Build.BuildId)
+  value: $[lower(system.teamProject)]-$(Build.BuildId)
 # Virtual network where ACI will be created
 - name: AZP-VNET-NAME
   value: vn-devops
