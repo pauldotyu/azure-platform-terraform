@@ -47,7 +47,7 @@ stages:
         inlineScript: |
           az container create \
             -g $(AZP-RG-NAME) \
-            -n ${{ lower(variables['AZP-AGENT-NAME']) }} \
+            -n $[lower(variables['AZP-AGENT-NAME'])] \
             --image $(ACR-IMAGE) \
             --registry-login-server $(ACR-SERVER) \
             --registry-username $(contosocr-pull-usr) \
@@ -177,4 +177,4 @@ stages:
         azureSubscription: 'terraform'
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
-        inlineScript: 'az container delete -n ${{ lower(variables['AZP-AGENT-NAME']) }} -g $(AZP-RG-NAME) -y'
+        inlineScript: 'az container delete -n $[lower(variables['AZP-AGENT-NAME'])] -g $(AZP-RG-NAME) -y'
