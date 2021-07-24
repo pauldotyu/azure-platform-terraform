@@ -15,7 +15,7 @@ variables:
   value: rg-devops
 # Name of ACI agent
 - name: AZP-AGENT-NAME
-  value: $[lower(system.teamProject)]-$(Build.BuildId)
+  value: $(System.TeamProject)
 # Virtual network where ACI will be created
 - name: AZP-VNET-NAME
   value: vn-devops
@@ -47,7 +47,7 @@ stages:
         inlineScript: |
           az container create \
             -g $(AZP-RG-NAME) \
-            -n $(AZP-AGENT-NAME) \
+            -n ${{ lower(variables.AZP-AGENT-NAME) }}-$(Build.BuildId) \
             --image $(ACR-IMAGE) \
             --registry-login-server $(ACR-SERVER) \
             --registry-username $(contosocr-pull-usr) \
@@ -60,7 +60,7 @@ stages:
             --cpu 1 \
             --memory 1 \
             --os-type Linux \
-            -e AZP_URL=$(AZDO-URL) AZP_AGENT_NAME=$(AZP-AGENT-NAME) AZP_POOL=$(AZDO-POOL) \
+            -e AZP_URL=$(AZDO-URL) AZP_AGENT_NAME=${{ lower(variables.AZP-AGENT-NAME) }}-$(Build.BuildId) AZP_POOL=$(AZDO-POOL) \
             --secure-environment-variables AZP_TOKEN=$(devops-pat)
 - stage: terraform_plan
   displayName: Terraform Plan
@@ -177,4 +177,4 @@ stages:
         azureSubscription: 'terraform'
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
-        inlineScript: 'az container delete -n $(AZP-AGENT-NAME) -g $(AZP-RG-NAME) -y'
+        inlineScript: 'az container delete -n ${{ lower(variables.AZP-AGENT-NAME) }}-$(Build.BuildId) -g $(AZP-RG-NAME) -y'
