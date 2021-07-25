@@ -16,6 +16,8 @@ variables:
 # Name of ACI agent
 - name: AZP-PROJ-NAME
   value: $[ lower(variables['System.TeamProject']) ]
+- name: AZP-AGENT-NAME
+  value: $(AZP-PROJ-NAME)-$(Build.BuildId)
 # Virtual network where ACI will be created
 - name: AZP-VNET-NAME
   value: vn-devops
@@ -47,7 +49,7 @@ stages:
         inlineScript: |
           az container create \
             -g $(AZP-RG-NAME) \
-            -n $(AZP-PROJ-NAME)-$(Build.BuildId) \
+            -n $(AZP-AGENT-NAME) \
             --image $(ACR-IMAGE) \
             --registry-login-server $(ACR-SERVER) \
             --registry-username $(contosocr-pull-usr) \
@@ -60,7 +62,7 @@ stages:
             --cpu 1 \
             --memory 1 \
             --os-type Linux \
-            -e AZP_URL=$(AZDO-URL) AZP_AGENT_NAME=$(AZP-PROJ-NAME)-$(Build.BuildId) AZP_POOL=$(AZDO-POOL) \
+            -e AZP_URL=$(AZDO-URL) AZP_AGENT_NAME=$(AZP-AGENT-NAME) AZP_POOL=$(AZDO-POOL) \
             --secure-environment-variables AZP_TOKEN=$(devops-pat)
 - stage: terraform_plan
   displayName: Terraform Plan
@@ -69,7 +71,7 @@ stages:
   pool:
     name: Contoso
     demands:
-      - agent.name -equals $(AZP-PROJ-NAME)-$(Build.BuildId)
+      - agent.name -equals $(AZP-AGENT-NAME)
   jobs:
   - job: terraform_plan
     displayName: Terraform Plan
@@ -97,7 +99,7 @@ stages:
   pool:
     name: Contoso
     demands:
-      - agent.name -equals $(AZP-PROJ-NAME)-$(Build.BuildId)
+      - agent.name -equals $(AZP-AGENT-NAME)
   jobs:
   - job: manual_validation
     displayName: Manual Approval
@@ -135,7 +137,7 @@ stages:
   pool:
     name: Contoso
     demands:
-      - agent.name -equals $(AZP-PROJ-NAME)-$(Build.BuildId)
+      - agent.name -equals $(AZP-AGENT-NAME)
   jobs:
   - job: manual_validation
     displayName: Approval Gate
@@ -178,4 +180,4 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          az container delete -n $(AZP-PROJ-NAME)-$(Build.BuildId) -g $(AZP-RG-NAME) -y
+          az container delete -n $(AZP-AGENT-NAME) -g $(AZP-RG-NAME) -y
