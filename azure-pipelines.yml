@@ -15,7 +15,7 @@ variables:
   value: rg-devops
 # Name of ACI agent
 - name: AZP-AGENT-NAME
-  value: $(System.TeamProject)-$(Build.BuildId)
+  value: $[ lower(variables['System.TeamProject']-variables['Build.BuildId']) ]
 # Virtual network where ACI will be created
 - name: AZP-VNET-NAME
   value: vn-devops
@@ -47,7 +47,7 @@ stages:
         inlineScript: |
           az container create \
             -g $(AZP-RG-NAME) \
-            -n $[lower(variables.AZP-AGENT-NAME)] \
+            -n $(AZP-AGENT-NAME) \
             --image $(ACR-IMAGE) \
             --registry-login-server $(ACR-SERVER) \
             --registry-username $(contosocr-pull-usr) \
@@ -178,4 +178,4 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          az container delete -n $[lower(variables.AZP-AGENT-NAME)] -g $(AZP-RG-NAME) -y
+          az container delete -n $(AZP-AGENT-NAME) -g $(AZP-RG-NAME) -y
