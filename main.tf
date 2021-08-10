@@ -1,3 +1,12 @@
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = ">= 2.66.0"
+    }
+  }
+}
+
 provider "azurerm" {
   features {}
 }
@@ -6,7 +15,13 @@ data "azurerm_client_config" "current" {}
 
 module "enterprise_scale" {
   source  = "Azure/caf-enterprise-scale/azurerm"
-  version = "0.3.3"
+  version = "0.4.0"
+
+  providers = {
+    azurerm              = azurerm
+    azurerm.connectivity = azurerm
+    azurerm.management   = azurerm
+  }
 
   # Mandatory Variables
   root_parent_id = data.azurerm_client_config.current.tenant_id
@@ -159,6 +174,18 @@ module "enterprise_scale" {
 
     landing-zones = {
       archetype_id   = "cu_landing_zones"
+      parameters     = {}
+      access_control = {}
+    }
+
+    identity = {
+      archetype_id   = "cu_identity"
+      parameters     = {}
+      access_control = {}
+    }
+
+    connectivity = {
+      archetype_id   = "cu_connectivity"
       parameters     = {}
       access_control = {}
     }
