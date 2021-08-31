@@ -108,6 +108,19 @@ module "enterprise_scale" {
         access_control = {}
       }
     }
+
+    cu-sde-cmmc = {
+      display_name               = "CMMC Level 3"
+      parent_management_group_id = "cu-sde"
+      subscription_ids           = []
+      archetype_config = {
+        archetype_id = "cu_sde_cmmc"
+        parameters = {
+
+        }
+        access_control = {}
+      }
+    }
   }
 
   archetype_config_overrides = {
