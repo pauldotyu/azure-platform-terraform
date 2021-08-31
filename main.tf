@@ -116,7 +116,11 @@ module "enterprise_scale" {
       archetype_config = {
         archetype_id = "cu_sde_cmmc"
         parameters = {
-
+          CU-Audit-CMMC = {
+            MembersToExclude-69bf4abd-ca1e-4cf6-8b5a-762d42e61d4f        = "nonadmin"
+            MembersToInclude-30f71ea1-ac77-4f26-9fc5-2d926bbd4ba7        = "admin"
+            logAnalyticsWorkspaceId-f47b5582-33ec-4c5c-87c0-b010a6b2e917 = local.secops_log_analytics_workspace_id
+          }
         }
         access_control = {}
       }

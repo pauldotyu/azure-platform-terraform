@@ -1,6 +1,7 @@
 {
 	"cu_sde_cmmc": {
 		"policy_assignments": [
+			"CU-Audit-CMMC"
 		],
 		"policy_definitions": [],
 		"policy_set_definitions": [],
