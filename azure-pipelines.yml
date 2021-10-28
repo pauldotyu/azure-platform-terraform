@@ -54,8 +54,6 @@ stages:
             --registry-login-server $(ACR-SERVER) \
             --registry-username $(contosocr-pull-usr) \
             --registry-password $(contosocr-pull-pwd) \
-            --assign-identity $(azp-managed-identity-id) \
-            --ip-address Private \
             --vnet $(AZP-VNET-NAME) \
             --subnet $(AZP-SNET-NAME) \
             --restart-policy never \
