@@ -1,29 +1,29 @@
 {
-	"cu_root": {
-		"policy_assignments": [
-			"Deploy-ASC-Monitoring",
-      "Deploy-ASC-Configuration",
+  "cu_root": {
+    "policy_assignments": [
+      "Deploy-ASC-Monitoring",
+      "Deploy-ASCDF-Config",
       "Deploy-AzActivity-Log",
       "Deploy-LX-Arc-Monitoring",
       "Deploy-Resource-Diag",
       "Deploy-VM-Monitoring",
       "Deploy-VMSS-Monitoring",
       "Deploy-WS-Arc-Monitoring",
-			"CU-Audit-CIS",
-			"CU-Audit-Public-Blobs",
-			"CU-Audit-AKS-Auth-IPs",
-			"CU-Audit-AKS-Baseline",
-			"CU-Audit-AKS-Defender",
-			"CU-Audit-AKS-Images",
-			"CU-Audit-AKS-Internal-LB",
-			"CU-Audit-AKS-HTTPS",
-			"CU-Audit-AKS-Policy",
-			"CU-Audit-AKS-RBAC",
-			"CU-Audit-AKS-Version",
-			"CU-Audit-AKS-Volume-Type"
-		],
-		"policy_definitions": [
-			"Append-AppService-httpsonly",
+      "CU-Audit-CIS",
+      "CU-Audit-Public-Blobs",
+      "CU-Audit-AKS-Auth-IPs",
+      "CU-Audit-AKS-Baseline",
+      "CU-Audit-AKS-Defender",
+      "CU-Audit-AKS-Images",
+      "CU-Audit-AKS-Internal-LB",
+      "CU-Audit-AKS-HTTPS",
+      "CU-Audit-AKS-Policy",
+      "CU-Audit-AKS-RBAC",
+      "CU-Audit-AKS-Version",
+      "CU-Audit-AKS-Volume-Type"
+    ],
+    "policy_definitions": [
+      "Append-AppService-httpsonly",
       "Append-AppService-latestTLS",
       "Append-KV-SoftDelete",
       "Append-Redis-disableNonSslPort",
@@ -34,6 +34,9 @@
       "Deny-AppServiceApiApp-http",
       "Deny-AppServiceFunctionApp-http",
       "Deny-AppServiceWebApp-http",
+      "Deny-Databricks-NoPublicIp",
+      "Deny-Databricks-Sku",
+      "Deny-Databricks-VirtualNetwork",
       "Deny-MachineLearning-Aks",
       "Deny-MachineLearning-Compute-SubnetId",
       "Deny-MachineLearning-Compute-VmSize",
@@ -41,6 +44,7 @@
       "Deny-MachineLearning-ComputeCluster-Scale",
       "Deny-MachineLearning-HbiWorkspace",
       "Deny-MachineLearning-PublicAccessWhenBehindVnet",
+      "Deny-MachineLearning-PublicNetworkAccess",
       "Deny-MySql-http",
       "Deny-PostgreSql-http",
       "Deny-Private-DNS-Zones",
@@ -55,20 +59,10 @@
       "Deny-Subnet-Without-Udr",
       "Deny-VNET-Peer-Cross-Sub",
       "Deny-VNet-Peering",
-      "Deploy-ASC-Defender-ACR",
-      "Deploy-ASC-Defender-AKS",
-      "Deploy-ASC-Defender-AKV",
-      "Deploy-ASC-Defender-AppSrv",
-      "Deploy-ASC-Defender-ARM",
-      "Deploy-ASC-Defender-DNS",
-      "Deploy-ASC-Defender-SA",
-      "Deploy-ASC-Defender-Sql",
-      "Deploy-ASC-Defender-SQLVM",
-      "Deploy-ASC-Defender-VMs",
       "Deploy-ASC-SecurityContacts",
       "Deploy-Budget",
+      "Deploy-Custom-Route-Table",
       "Deploy-DDoSProtection",
-      "Deploy-Default-Udr",
       "Deploy-Diagnostics-AA",
       "Deploy-Diagnostics-ACI",
       "Deploy-Diagnostics-ACR",
@@ -132,25 +126,25 @@
       "Deploy-Storage-sslEnforcement",
       "Deploy-VNET-HubSpoke",
       "Deploy-Windows-DomainJoin",
-			"CU-Audit-Storage-With-Public-Blob-Access",
-			"CU-Audit-Windows-Server-License",
-			"CU-Audit-Resource-Groups-Without-Required-Tags",
-			"CU-Audit-Resources-Without-Required-Tags",
-			"Deploy-Activity-Log-Alerts"
-		],
-		"policy_set_definitions": [
-			"Deny-PublicPaaSEndpoints",
-      "Deploy-ASC-Config",
+      "CU-Audit-Storage-With-Public-Blob-Access",
+      "CU-Audit-Windows-Server-License",
+      "CU-Audit-Resource-Groups-Without-Required-Tags",
+      "CU-Audit-Resources-Without-Required-Tags",
+      "CU-Deploy-Activity-Log-Alerts"
+    ],
+    "policy_set_definitions": [
+      "Deny-PublicPaaSEndpoints",
+      "Deploy-ASCDF-Config",
       "Deploy-Diagnostics-LogAnalytics",
       "Deploy-Private-DNS-Zones",
       "Deploy-Sql-Security",
       "Enforce-Encryption-CMK",
       "Enforce-EncryptTransit"
-		],
-		"role_definitions": [],
-		"archetype_config": {
-			"parameters": {},
-			"access_control": {}
-		}
-	}
+    ],
+    "role_definitions": [],
+    "archetype_config": {
+      "parameters": {},
+      "access_control": {}
+    }
+  }
 }

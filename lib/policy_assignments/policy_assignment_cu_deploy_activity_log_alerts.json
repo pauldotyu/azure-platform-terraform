@@ -11,7 +11,7 @@
         "value": "DeployIfNotExists"
       }
     },
-    "policyDefinitionId": "${root_scope_resource_id}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Activity-Log-Alerts",
+    "policyDefinitionId": "${root_scope_resource_id}/providers/Microsoft.Authorization/policyDefinitions/CU-Deploy-Activity-Log-Alerts",
     "scope": "${current_scope_resource_id}"
   },
   "location": "${default_location}",

@@ -1,5 +1,5 @@
 {
-  "name": "Deploy-Activity-Log-Alerts",
+  "name": "CU-Deploy-Activity-Log-Alerts",
   "type": "Microsoft.Authorization/policyDefinitions",
   "apiVersion": "2019-09-01",
   "properties": {
@@ -17,10 +17,7 @@
           "displayName": "Effect",
           "description": "Enable or disable the execution of the policy"
         },
-        "allowedValues": [
-          "DeployIfNotExists",
-          "Disabled"
-        ],
+        "allowedValues": ["DeployIfNotExists", "Disabled"],
         "defaultValue": "DeployIfNotExists"
       },
       "actionGroupName": {
@@ -205,9 +202,7 @@
                     "location": "[deployment().location]",
                     "properties": {
                       "enabled": true,
-                      "scopes": [
-                        "[subscription().id]"
-                      ],
+                      "scopes": ["[subscription().id]"],
                       "condition": {
                         "allOf": [
                           {
