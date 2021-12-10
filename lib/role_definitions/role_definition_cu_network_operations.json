@@ -22,8 +22,6 @@
         "notDataActions": []
       }
     ],
-    "assignableScopes": [
-      "/"
-    ]
+    "assignableScopes": ["${current_scope_resource_id}"]
   }
 }

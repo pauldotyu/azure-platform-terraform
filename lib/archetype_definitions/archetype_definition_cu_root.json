@@ -141,7 +141,7 @@
       "Enforce-Encryption-CMK",
       "Enforce-EncryptTransit"
     ],
-    "role_definitions": [],
+    "role_definitions": ["CU-AVD-Autoscale"],
     "archetype_config": {
       "parameters": {},
       "access_control": {}

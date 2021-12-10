@@ -8,9 +8,7 @@
     "type": "customRole",
     "permissions": [
       {
-        "actions": [
-          "*"
-        ],
+        "actions": ["*"],
         "notActions": [
           "Microsoft.Authorization/*/write",
           "Microsoft.Network/vpnGateways/*",
@@ -25,8 +23,6 @@
         "notDataActions": []
       }
     ],
-    "assignableScopes": [
-      "/"
-    ]
+    "assignableScopes": ["${current_scope_resource_id}"]
   }
 }
