@@ -19,8 +19,7 @@
       "CU-Audit-AKS-Policy",
       "CU-Audit-AKS-RBAC",
       "CU-Audit-AKS-Version",
-      "CU-Audit-AKS-Volume-Type",
-      "CU-Deploy-Defenders"
+      "CU-Audit-AKS-Volume-Type"
     ],
     "policy_definitions": [
       "Append-AppService-httpsonly",

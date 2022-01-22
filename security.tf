@@ -65,22 +65,22 @@ resource "azurerm_advanced_threat_protection" "secops" {
   enabled            = true
 }
 
-resource "azurerm_security_center_contact" "secops" {
-  email = var.azure_defender_contact.email
-  phone = var.azure_defender_contact.phone
+# resource "azurerm_security_center_contact" "secops" {
+#   email = var.azure_defender_contact.email
+#   phone = var.azure_defender_contact.phone
 
-  alert_notifications = true
-  alerts_to_admins    = true
-}
+#   alert_notifications = true
+#   alerts_to_admins    = true
+# }
 
-resource "azurerm_log_analytics_data_export_rule" "secops" {
-  name                    = "law${local.resource_name_unique}-dataexport"
-  resource_group_name     = azurerm_resource_group.secops.name
-  workspace_resource_id   = azurerm_log_analytics_workspace.secops.id
-  destination_resource_id = azurerm_storage_account.secops.id
-  table_names             = ["Heartbeat", "SecurityEvent"]
-  enabled                 = true
-}
+# resource "azurerm_log_analytics_data_export_rule" "secops" {
+#   name                    = "law${local.resource_name_unique}-dataexport"
+#   resource_group_name     = azurerm_resource_group.secops.name
+#   workspace_resource_id   = azurerm_log_analytics_workspace.secops.id
+#   destination_resource_id = azurerm_storage_account.secops.id
+#   table_names             = ["Heartbeat", "SecurityEvent"]
+#   enabled                 = true
+# }
 
 # resource "azurerm_security_center_workspace" "secops" {
 #   for_each     = { for s in data.azurerm_subscriptions.available.subscriptions : s.id => s }
