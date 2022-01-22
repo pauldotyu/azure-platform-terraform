@@ -12,6 +12,7 @@ provider "azurerm" {
 }
 
 data "azurerm_client_config" "current" {}
+data "azurerm_subscriptions" "available" {}
 
 module "enterprise_scale" {
   source  = "Azure/caf-enterprise-scale/azurerm"
@@ -162,11 +163,6 @@ module "enterprise_scale" {
           logAnalytics = azurerm_log_analytics_workspace.secops.id
         }
 
-        CU-Audit-CIS = {
-          listOfRegionsWhereNetworkWatcherShouldBeEnabled = var.allowed_locations
-          listOfApprovedVMExtensions                      = var.allowed_vm_extensions
-        }
-
         CU-Audit-Public-Blobs = {
           effect = "Audit"
         }
@@ -209,7 +205,4 @@ module "enterprise_scale" {
     management     = var.management_subs
     identity       = var.identity_subs
   }
-}
-
-data "azurerm_subscriptions" "available" {
 }

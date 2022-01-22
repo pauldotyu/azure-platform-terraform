@@ -9,7 +9,6 @@
       "Deploy-VM-Monitoring",
       "Deploy-VMSS-Monitoring",
       "Deploy-WS-Arc-Monitoring",
-      "CU-Audit-CIS",
       "CU-Audit-Public-Blobs",
       "CU-Audit-AKS-Auth-IPs",
       "CU-Audit-AKS-Baseline",
