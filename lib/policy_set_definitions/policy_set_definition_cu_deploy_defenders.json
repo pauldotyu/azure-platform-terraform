@@ -19,13 +19,8 @@
         "groupNames": []
       },
       {
-        "policyDefinitionReferenceId": "MicrosoftDefenderForContainerRegistry",
+        "policyDefinitionReferenceId": "MicrosoftDefenderForAppService",
         "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/b40e7bcd-a1e5-47fe-b9cf-2f534d0bfb7d",
-        "groupNames": []
-      },
-      {
-        "policyDefinitionReferenceId": "MicrosoftDefenderForAzureSQL",
-        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/7fe3b40f-802b-4cdd-8bd4-fd799c948cc2",
         "groupNames": []
       },
       {
