@@ -142,7 +142,7 @@ module "enterprise_scale" {
         Deploy-ASCDF-Config = {
           emailSecurityContact = var.azure_defender_contact.email
           logAnalytics = azurerm_log_analytics_workspace.secops.id
-          ascExportResourceGroupName = azurerm_resource_group.secops.name
+          ascExportResourceGroupName = "DefenderExportRG"
           ascExportResourceGroupLocation = azurerm_resource_group.secops.location
           enableAscForKubernetes = "DeployIfNotExists"
           enableAscForSql = "DeployIfNotExists"
