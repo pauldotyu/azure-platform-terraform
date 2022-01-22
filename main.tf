@@ -9,7 +9,6 @@ terraform {
 
 provider "azurerm" {
   features {}
-  subscription_id = var.subscription_id
 }
 
 data "azurerm_client_config" "current" {}
@@ -36,12 +35,12 @@ module "enterprise_scale" {
   default_location          = var.default_location
 
   custom_landing_zones = {
-    cu-demo = {
-      display_name               = "Demo"
+    cu-restricted = {
+      display_name               = "Restricted"
       parent_management_group_id = "cu-sandboxes"
-      subscription_ids           = []
+      subscription_ids           = var.restricted_subs
       archetype_config = {
-        archetype_id = "cu_demo"
+        archetype_id = "cu_restricted"
         parameters = {
           CU-Deny-Resources = {
             listOfResourceTypesAllowed = var.allowed_resources
@@ -72,20 +71,11 @@ module "enterprise_scale" {
         parameters = {
           CU-Audit-HIPAA = {
             installedApplicationsOnWindowsVM                              = "*"
-            DeployDiagnosticSettingsforNetworkSecurityGroupsstoragePrefix = var.secops_nsg_storage_prefix
-            DeployDiagnosticSettingsforNetworkSecurityGroupsrgName        = var.secops_nsg_rg_name
+            DeployDiagnosticSettingsforNetworkSecurityGroupsstoragePrefix = "sa${local.resource_name_unique}"
+            DeployDiagnosticSettingsforNetworkSecurityGroupsrgName        = azurerm_resource_group.secops.name
             CertificateThumbprints                                        = "Nothing"
-            workspaceId                                                   = var.secops_log_analytics_workspace_id
+            workspaceId                                                   = azurerm_log_analytics_workspace.secops.workspace_id
             listOfLocations                                               = var.allowed_locations
-          }
-
-          CU-Deploy-Activity-Logs = {
-            effect               = "DeployIfNotExists"
-            actionGroupName      = "secopsag"
-            actionGroupShortName = "secopsag"
-            emailAddress         = "pauyu@microsoft.com"
-            activityLogAlertName = "NSGDeleted"
-            operationName        = "Microsoft.Network/networkSecurityGroups/delete"
           }
         }
         access_control = {}
@@ -102,7 +92,7 @@ module "enterprise_scale" {
           CU-Audit-NIST-800-171 = {
             membersToExcludeInLocalAdministratorsGroup = "nonadmin"
             membersToIncludeInLocalAdministratorsGroup = "admin"
-            logAnalyticsWorkspaceIDForVMAgents         = var.secops_log_analytics_workspace_id
+            logAnalyticsWorkspaceIDForVMAgents         = azurerm_log_analytics_workspace.secops.workspace_id
             listOfLocationsForNetworkWatcher           = var.allowed_locations
           }
         }
@@ -120,7 +110,7 @@ module "enterprise_scale" {
           CU-Audit-CMMC = {
             MembersToExclude-69bf4abd-ca1e-4cf6-8b5a-762d42e61d4f        = "nonadmin"
             MembersToInclude-30f71ea1-ac77-4f26-9fc5-2d926bbd4ba7        = "admin"
-            logAnalyticsWorkspaceId-f47b5582-33ec-4c5c-87c0-b010a6b2e917 = var.secops_log_analytics_workspace_id
+            logAnalyticsWorkspaceId-f47b5582-33ec-4c5c-87c0-b010a6b2e917 = azurerm_log_analytics_workspace.secops.workspace_id
           }
         }
         access_control = {}
@@ -149,27 +139,27 @@ module "enterprise_scale" {
         }
 
         Deploy-AzActivity-Log = {
-          logAnalytics = var.secops_log_analytics_workspace_resource_id
+          logAnalytics = azurerm_log_analytics_workspace.secops.id
         }
 
         Deploy-LX-Arc-Monitoring = {
-          logAnalytics = var.secops_log_analytics_workspace_resource_id
+          logAnalytics = azurerm_log_analytics_workspace.secops.id
         }
 
         Deploy-Resource-Diag = {
-          logAnalytics = var.secops_log_analytics_workspace_resource_id
+          logAnalytics = azurerm_log_analytics_workspace.secops.id
         }
 
         Deploy-VM-Monitoring = {
-          logAnalytics_1 = var.secops_log_analytics_workspace_resource_id
+          logAnalytics_1 = azurerm_log_analytics_workspace.secops.id
         }
 
         Deploy-VMSS-Monitoring = {
-          logAnalytics_1 = var.secops_log_analytics_workspace_resource_id
+          logAnalytics_1 = azurerm_log_analytics_workspace.secops.id
         }
 
         Deploy-WS-Arc-Monitoring = {
-          logAnalytics = var.secops_log_analytics_workspace_resource_id
+          logAnalytics = azurerm_log_analytics_workspace.secops.id
         }
 
         CU-Audit-CIS = {
@@ -221,10 +211,5 @@ module "enterprise_scale" {
   }
 }
 
-# TODO: Grant all managed identities for CU-Deploy-Diag-* policies Log Analytics Contributor access to centralized Log Analytics Workspace
-
-# module "budgets" {
-#   source          = "./modules/budgets"
-#   count           = length(var.connectivity_subs)
-#   subscription_id = var.connectivity_subs[count.index]
-# }
+data "azurerm_subscriptions" "available" {
+}

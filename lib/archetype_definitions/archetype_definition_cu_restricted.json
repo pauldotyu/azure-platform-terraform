@@ -1,6 +1,6 @@
 {
-  "cu_sde_hipaa": {
-    "policy_assignments": ["CU-Audit-HIPAA"],
+  "cu_restricted": {
+    "policy_assignments": ["CU-Deny-Resources"],
     "policy_definitions": [],
     "policy_set_definitions": [],
     "role_definitions": [],

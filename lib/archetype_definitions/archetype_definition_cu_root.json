@@ -20,7 +20,8 @@
       "CU-Audit-AKS-Policy",
       "CU-Audit-AKS-RBAC",
       "CU-Audit-AKS-Version",
-      "CU-Audit-AKS-Volume-Type"
+      "CU-Audit-AKS-Volume-Type",
+      "CU-Deploy-Defenders"
     ],
     "policy_definitions": [
       "Append-AppService-httpsonly",
@@ -129,8 +130,7 @@
       "CU-Audit-Storage-With-Public-Blob-Access",
       "CU-Audit-Windows-Server-License",
       "CU-Audit-Resource-Groups-Without-Required-Tags",
-      "CU-Audit-Resources-Without-Required-Tags",
-      "CU-Deploy-Activity-Log-Alerts"
+      "CU-Audit-Resources-Without-Required-Tags"
     ],
     "policy_set_definitions": [
       "Deny-PublicPaaSEndpoints",
@@ -139,7 +139,8 @@
       "Deploy-Private-DNS-Zones",
       "Deploy-Sql-Security",
       "Enforce-Encryption-CMK",
-      "Enforce-EncryptTransit"
+      "Enforce-EncryptTransit",
+      "Deploy-Microsoft-Defenders"
     ],
     "role_definitions": ["CU-AVD-Autoscale"],
     "archetype_config": {
