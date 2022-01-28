@@ -1,15 +1,15 @@
 {
   "name": "CU-Deploy-Activity-Log-Alerts",
   "type": "Microsoft.Authorization/policyDefinitions",
-  "apiVersion": "2019-09-01",
+  "apiVersion": "2021-06-01",
   "properties": {
-    "mode": "Indexed",
     "description": "This policy deploys activity log alerts for specific Administrative operations.",
     "displayName": "Activity log alert for specific Administrative operations",
     "metadata": {
       "version": "1.0.0",
       "category": "Monitoring"
     },
+    "mode": "All",
     "parameters": {
       "effect": {
         "type": "String",
@@ -177,13 +177,15 @@
                     "type": "string"
                   }
                 },
-                "variables": {},
+                "variables": {
+                  "alertScope": "[format('/subscriptions/{0}', subscription().subscriptionId)]"
+                },
                 "resources": [
                   {
                     "type": "Microsoft.Insights/actionGroups",
-                    "apiVersion": "2019-06-01",
+                    "apiVersion": "2021-09-01",
                     "name": "[parameters('actionGroupName')]",
-                    "location": "[deployment().location]",
+                    "location": "Global",
                     "properties": {
                       "groupShortName": "[parameters('actionGroupShortName')]",
                       "enabled": true,
@@ -192,16 +194,17 @@
                           "name": "emailReceiver",
                           "emailAddress": "[parameters('emailAddress')]"
                         }
-                      ]
+                      ],
+                      "smsReceivers": [],
+                      "webhookReceivers": []
                     }
                   },
                   {
-                    "type": "microsoft.insights/activityLogAlerts",
+                    "type": "Microsoft.Insights/activityLogAlerts",
                     "apiVersion": "2020-10-01",
                     "name": "[parameters('activityLogAlertName')]",
-                    "location": "[deployment().location]",
+                    "location": "Global",
                     "properties": {
-                      "enabled": true,
                       "scopes": ["[subscription().id]"],
                       "condition": {
                         "allOf": [
@@ -218,11 +221,17 @@
                       "actions": {
                         "actionGroups": [
                           {
-                            "actionGroupId": "[resourceId('Microsoft.Insights/actionGroups', parameters('actionGroupName'))]"
+                            "actionGroupId": "[resourceId('Microsoft.Insights/actionGroups', parameters('actionGroupName'))]",
+                            "webhookProperties": {}
                           }
                         ]
-                      }
-                    }
+                      },
+                      "enabled": true,
+                      "description": ""
+                    },
+                    "dependsOn": [
+                      "[resourceId('Microsoft.Insights/actionGroups', parameters('actionGroupName'))]"
+                    ]
                   }
                 ]
               }
