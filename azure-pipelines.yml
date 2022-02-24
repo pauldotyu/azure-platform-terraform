@@ -12,7 +12,7 @@ variables:
   value: Contoso
 # Resource group where ACI will be created
 - name: AZP-RG-NAME
-  value: rg-devops
+  value: rg-devopsdoe
 # Name of ACI agent
 - name: AZP-PROJ-NAME
   value: $[ lower(variables['System.TeamProject']) ]
@@ -26,10 +26,10 @@ variables:
   value: ACISubnet
 # Container image that will be used for ACI agent
 - name: ACR-IMAGE
-  value: contosocr.azurecr.io/azpcontoso:latest
+  value: acrdevopsdoe257.azurecr.io/azpagent/devopsdoe:latest
 # Container registry - credentials are pulled through key vault
 - name: ACR-SERVER
-  value: contosocr.azurecr.io
+  value: acrdevopsdoe257.azurecr.io
 
 stages:
 - stage: start_agent
