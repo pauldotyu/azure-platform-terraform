@@ -137,10 +137,11 @@
       "Deploy-Private-DNS-Zones",
       "Deploy-Sql-Security",
       "Enforce-Encryption-CMK",
-      "Enforce-EncryptTransit",
-      "Deploy-Microsoft-Defenders"
+      "Enforce-EncryptTransit"
     ],
-    "role_definitions": ["CU-AVD-Autoscale"],
+    "role_definitions": [
+      "CU-AVD-Autoscale"
+    ],
     "archetype_config": {
       "parameters": {},
       "access_control": {}

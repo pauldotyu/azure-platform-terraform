@@ -16,7 +16,7 @@ data "azurerm_subscriptions" "available" {}
 
 module "enterprise_scale" {
   source  = "Azure/caf-enterprise-scale/azurerm"
-  version = "1.1.1"
+  version = "1.1.3"
 
   providers = {
     azurerm              = azurerm
@@ -140,21 +140,21 @@ module "enterprise_scale" {
         }
 
         Deploy-ASCDF-Config = {
-          emailSecurityContact = var.azure_defender_contact.email
-          logAnalytics = azurerm_log_analytics_workspace.secops.id
-          ascExportResourceGroupName = "DefenderExportRG"
+          emailSecurityContact           = var.azure_defender_contact.email
+          logAnalytics                   = azurerm_log_analytics_workspace.secops.id
+          ascExportResourceGroupName     = "DefenderExportRG"
           ascExportResourceGroupLocation = azurerm_resource_group.secops.location
-          enableAscForKubernetes = "DeployIfNotExists"
-          enableAscForSql = "DeployIfNotExists"
-          enableAscForSqlOnVm = "DeployIfNotExists"
-          enableAscForDns = "DeployIfNotExists"
-          enableAscForArm = "DeployIfNotExists"
-          enableAscForOssDb = "DeployIfNotExists"
-          enableAscForAppServices = "DeployIfNotExists"
-          enableAscForRegistries = "DeployIfNotExists"
-          enableAscForKeyVault = "DeployIfNotExists"
-          enableAscForStorage = "DeployIfNotExists"
-          enableAscForServers = "DeployIfNotExists"
+          enableAscForKubernetes         = "DeployIfNotExists"
+          enableAscForSql                = "DeployIfNotExists"
+          enableAscForSqlOnVm            = "DeployIfNotExists"
+          enableAscForDns                = "DeployIfNotExists"
+          enableAscForArm                = "DeployIfNotExists"
+          enableAscForOssDb              = "DeployIfNotExists"
+          enableAscForAppServices        = "DeployIfNotExists"
+          enableAscForRegistries         = "DeployIfNotExists"
+          enableAscForKeyVault           = "DeployIfNotExists"
+          enableAscForStorage            = "DeployIfNotExists"
+          enableAscForServers            = "DeployIfNotExists"
         }
 
         Deploy-AzActivity-Log = {

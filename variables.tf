@@ -188,6 +188,11 @@ variable "connectivity_subs" {
   description = "(optional) describe your variable"
 }
 
+variable "landing_zone_subs" {
+  type        = list(string)
+  description = "(optional) describe your variable"
+}
+
 variable "sde_hipaa_subs" {
   type        = list(string)
   description = "(optional) describe your variable"
