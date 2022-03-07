@@ -31,4 +31,4 @@ override.tf.json
 *.tfplan
 
 # Ignore partial backend configuration files
-backend.hcl
+*.tfbackend

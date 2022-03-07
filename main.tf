@@ -2,7 +2,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">= 2.77.0"
+      version = ">= 2.98.0"
     }
   }
 }
@@ -217,7 +217,7 @@ module "enterprise_scale" {
     root           = []
     decommissioned = []
     sandboxes      = var.sandbox_subs
-    landing-zones  = []
+    landing-zones  = var.landing_zone_subs
     platform       = var.platform_subs
     connectivity   = var.connectivity_subs
     management     = var.management_subs
