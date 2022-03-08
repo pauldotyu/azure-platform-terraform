@@ -245,3 +245,15 @@ variable "azure_defender_contact" {
   })
   description = "Azure Defender contact information"
 }
+
+variable "devops_subscription_id" {
+  type = string
+}
+
+variable "devops_keyvault_name" {
+  type = string
+}
+
+variable "devops_keyvault_rg_name" {
+  type = string
+}

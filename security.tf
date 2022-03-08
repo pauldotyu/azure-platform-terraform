@@ -87,3 +87,29 @@ resource "azurerm_advanced_threat_protection" "secops" {
 #   scope        = each.value["id"]
 #   workspace_id = azurerm_log_analytics_workspace.secops.id
 # }
+
+provider "azurerm" {
+  features {}
+  alias           = "devops"
+  subscription_id = var.devops_subscription_id
+}
+
+data "azurerm_key_vault" "devops" {
+  provider            = azurerm.devops
+  name                = var.devops_keyvault_name
+  resource_group_name = var.devops_keyvault_rg_name
+}
+
+resource "azurerm_key_vault_secret" "secops_law_workspace_id" {
+  provider     = azurerm.devops
+  name         = "secops-law-workspace-id"
+  value        = azurerm_log_analytics_workspace.secops.workspace_id
+  key_vault_id = data.azurerm_key_vault.devops.id
+}
+
+resource "azurerm_key_vault_secret" "secops_law_workspace_key" {
+  provider     = azurerm.devops
+  name         = "secops-law-workspace-key"
+  value        = azurerm_log_analytics_workspace.secops.primary_shared_key
+  key_vault_id = data.azurerm_key_vault.devops.id
+}
