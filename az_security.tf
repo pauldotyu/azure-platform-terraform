@@ -110,20 +110,21 @@ data "azurerm_key_vault" "devops" {
   resource_group_name = var.devops_keyvault_rg_name
 }
 
-#tfsec:ignore:azure-keyvault-ensure-secret-expiry
 resource "azurerm_key_vault_secret" "secops_law_workspace_id" {
-  provider        = azurerm.devops
-  name            = "secops-law-workspace-id"
-  value           = azurerm_log_analytics_workspace.secops.workspace_id
-  key_vault_id    = data.azurerm_key_vault.devops.id
-  content_type    = "plaintext"
+  provider     = azurerm.devops
+  name         = "secops-law-workspace-id"
+  value        = azurerm_log_analytics_workspace.secops.workspace_id
+  key_vault_id = data.azurerm_key_vault.devops.id
+  content_type = "plaintext"
+  #tfsec:ignore:azure-keyvault-ensure-secret-expiry
 }
 
-#tfsec:ignore:azure-keyvault-ensure-secret-expiry
+
 resource "azurerm_key_vault_secret" "secops_law_workspace_key" {
-  provider        = azurerm.devops
-  name            = "secops-law-workspace-key"
-  value           = azurerm_log_analytics_workspace.secops.primary_shared_key
-  key_vault_id    = data.azurerm_key_vault.devops.id
-  content_type    = "plaintext"
+  provider     = azurerm.devops
+  name         = "secops-law-workspace-key"
+  value        = azurerm_log_analytics_workspace.secops.primary_shared_key
+  key_vault_id = data.azurerm_key_vault.devops.id
+  content_type = "plaintext"
+  #tfsec:ignore:azure-keyvault-ensure-secret-expiry
 }
