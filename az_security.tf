@@ -51,6 +51,7 @@ resource "azurerm_log_analytics_datasource_windows_performance_counter" "secops"
   interval_seconds    = 60
 }
 
+#tfsec:ignore:azure-storage-queue-services-logging-enabled
 resource "azurerm_storage_account" "secops" {
   name                     = "sa${local.resource_name_unique}"
   resource_group_name      = azurerm_resource_group.secops.name
@@ -59,15 +60,6 @@ resource "azurerm_storage_account" "secops" {
   account_replication_type = "GRS" #"GRS"
   tags                     = var.tags
   min_tls_version          = "TLS1_2"
-
-  queue_properties {
-    logging {
-      delete  = true
-      read    = true
-      write   = true
-      version = "1.0"
-    }
-  }
 }
 
 resource "azurerm_advanced_threat_protection" "secops" {
@@ -110,21 +102,21 @@ data "azurerm_key_vault" "devops" {
   resource_group_name = var.devops_keyvault_rg_name
 }
 
+#tfsec:ignore:azure-keyvault-ensure-secret-expiry
 resource "azurerm_key_vault_secret" "secops_law_workspace_id" {
   provider     = azurerm.devops
   name         = "secops-law-workspace-id"
   value        = azurerm_log_analytics_workspace.secops.workspace_id
   key_vault_id = data.azurerm_key_vault.devops.id
   content_type = "plaintext"
-  #tfsec:ignore:azure-keyvault-ensure-secret-expiry
 }
 
 
+#tfsec:ignore:azure-keyvault-ensure-secret-expiry
 resource "azurerm_key_vault_secret" "secops_law_workspace_key" {
   provider     = azurerm.devops
   name         = "secops-law-workspace-key"
   value        = azurerm_log_analytics_workspace.secops.primary_shared_key
   key_vault_id = data.azurerm_key_vault.devops.id
   content_type = "plaintext"
-  #tfsec:ignore:azure-keyvault-ensure-secret-expiry
 }
