@@ -58,6 +58,7 @@ resource "azurerm_storage_account" "secops" {
   account_tier             = "Standard"
   account_replication_type = "GRS" #"GRS"
   tags                     = var.tags
+  min_tls_version          = "TLS1_2"
 }
 
 resource "azurerm_advanced_threat_protection" "secops" {
