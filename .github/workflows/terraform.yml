@@ -49,7 +49,7 @@ on:
     types: [labeled]
 
 jobs:
-  create-azure-resources:
+  deploy-azure-resources:
     runs-on: ubuntu-latest
     environment: production
 
@@ -58,7 +58,7 @@ jobs:
       run:
         shell: bash
 
-    if: contains(github.event.pull_request.labels.*.name, 'create')
+    if: contains(github.event.pull_request.labels.*.name, 'deploy')
 
     steps:
       # Checkout the repository to the GitHub Actions runner
