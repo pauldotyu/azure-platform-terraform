@@ -24,7 +24,7 @@ resource "azurerm_log_analytics_workspace" "secops" {
   name                = "law${local.resource_name_unique}"
   resource_group_name = azurerm_resource_group.secops.name
   location            = azurerm_resource_group.secops.location
-  sku                 = "pergb2018"
+  sku                 = "PerGB2018"
   retention_in_days   = 30
   tags                = var.tags
 }
@@ -35,9 +35,9 @@ resource "azurerm_log_analytics_datasource_windows_event" "secops" {
   workspace_name      = azurerm_log_analytics_workspace.secops.name
   event_log_name      = "System"
   event_types = [
-    "error",
-    "warning",
-    "information"
+    "Error",
+    "Warning",
+    "Information"
   ]
 }
 

@@ -2,7 +2,7 @@
   "cu_root": {
     "policy_assignments": [
       "Deploy-ASC-Monitoring",
-      "Deploy-ASCDF-Config",
+      "Deploy-MDFC-Config",
       "Deploy-AzActivity-Log",
       "Deploy-LX-Arc-Monitoring",
       "Deploy-Resource-Diag",
@@ -57,6 +57,7 @@
       "Deny-Subnet-Without-Nsg",
       "Deny-Subnet-Without-Udr",
       "Deny-VNET-Peer-Cross-Sub",
+      "Deny-VNET-Peering-To-Non-Approved-VNETs",
       "Deny-VNet-Peering",
       "Deploy-ASC-SecurityContacts",
       "Deploy-Budget",
@@ -132,16 +133,14 @@
     ],
     "policy_set_definitions": [
       "Deny-PublicPaaSEndpoints",
-      "Deploy-ASCDF-Config",
       "Deploy-Diagnostics-LogAnalytics",
+      "Deploy-MDFC-Config",
       "Deploy-Private-DNS-Zones",
       "Deploy-Sql-Security",
       "Enforce-Encryption-CMK",
       "Enforce-EncryptTransit"
     ],
-    "role_definitions": [
-      "CU-AVD-Autoscale"
-    ],
+    "role_definitions": ["CU-AVD-Autoscale"],
     "archetype_config": {
       "parameters": {},
       "access_control": {}
