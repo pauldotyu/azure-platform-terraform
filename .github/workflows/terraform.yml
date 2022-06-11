@@ -143,6 +143,12 @@ jobs:
         run: |
           az account list --query "[].id" -o tsv | while read id; do
             az account set -s $id
-            az group delete --name "NetworkWatcherRG"
-            az group delete --name "DefenderExportRG"
+            # delete NetworkWatcherRG
+            az group list --query "[?contains(name, 'NetworkWatcherRG')].name" -o tsv | while read name; do
+              az group delete --name $name -y
+            done
+            # delete DefenderExportRG
+            az group list --query "[?contains(name, 'DefenderExportRG')].name" -o tsv | while read name; do
+              az group delete --name $name -y
+            done
           done
