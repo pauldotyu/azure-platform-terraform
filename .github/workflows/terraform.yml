@@ -138,3 +138,17 @@ jobs:
       - name: Terraform Destroy
         # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform destroy -auto-approve
+
+      - name: Delete monitoring resource groups
+        run: |
+          az account list --query "[].id" -o tsv | while read id; do
+            az account set -s $id
+            # delete NetworkWatcherRG
+            az group list --query "[?contains(name, 'NetworkWatcherRG')].name" -o tsv | while read name; do
+              az group delete --name $name -y
+            done
+            # delete DefenderExportRG
+            az group list --query "[?contains(name, 'DefenderExportRG')].name" -o tsv | while read name; do
+              az group delete --name $name -y
+            done
+          done
