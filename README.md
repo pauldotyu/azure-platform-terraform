@@ -22,3 +22,5 @@ To initialize the backend, you can pass in the \*.tfbackend file at runtime like
 ```sh
 terraform init --backend-config=config.remote.tfbackend
 ```
+
+This repo uses GitHub Actions to deploy and destroy resources. To deploy resources, create a pull request and label it with `deploy`. This will trigger a `terraform apply` command. To destroy resources, create a pull request and label it with `destroy`. This will trigger a `terrafrom destroy` command.
