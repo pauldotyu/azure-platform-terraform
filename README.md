@@ -15,7 +15,7 @@ This repo uses [Terraform Cloud](https://www.terraform.io/cloud-docs) for remote
 
 To initialize your backend, you'll need to supply additional backend configs. This repo uses a partial backend configuration file named `config.remote.tfbackend` which is kept as a secret in the github repo. The config file looks like this:
 
-```json
+```terraform
 workspaces { name = "<MY_TF_WORKSPACE_NAME>" }
 hostname     = "app.terraform.io"
 organization = "<MY_TF_ORGANIZATION_NAME>"
@@ -146,7 +146,7 @@ With your customizations in place, you'll need to make edits in the `main.tf`.
 
 First add a setting in the `module.enterprise_scale` resource to point to your custom `lib` directory
 
-```json
+```terraform
 module "enterprise_scale" {
   ...
   library_path              = "${path.root}/lib" 
@@ -165,7 +165,7 @@ Next, you need to add a `archetype_config_overrides` block in the `module.enterp
 
 Here is an example of how the root management group with display name of "Contoso Univeristy" and identifer of "cu" has been configured.
 
-```json
+```terraform
 module "enterprise_scale" {
   ...
   archetype_config_overrides = {
@@ -188,7 +188,7 @@ This requires a bit of understanding on how Azure Policy assignments work. For e
 
 > It is recommended you go through this [tutorial](https://docs.microsoft.com/en-us/azure/governance/policy/assign-policy-portal) to understand how policy assignments work in the Azure Portal.
 
-```json
+```terraform
 module "enterprise_scale" {
   ...
   archetype_config_overrides = {
@@ -272,7 +272,7 @@ In order to add custom management groups, you need to use the `custom_landing_zo
 
 Below is an example of how to add a "Secure Data Enclave" management group under "Landing Zones" and nest in a "HITRUST/HIPAA" management group under "Secure Data Enclave".
 
-```json
+```terraform
 module "enterprise_scale" {
   ...
   custom_landing_zones = {
@@ -314,7 +314,7 @@ You'll need to create a new map object inside the `custom_landing_zones` object.
 
 Within each block you can then point to the `archetype_defintion_*` file using the `archetype_config` object.
 
-```json
+```terraform
 module "enterprise_scale" {
   ...
   custom_landing_zones = {
@@ -366,7 +366,7 @@ To define a policy, you need to include it in the appropriate management group d
 
 Here is an example of custom resources being defined in the `cu_root` management group:
 
-```json
+```terraform
 {
   "cu_root": {
     "policy_assignments": [
