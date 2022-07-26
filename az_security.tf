@@ -90,33 +90,104 @@ resource "azurerm_advanced_threat_protection" "secops" {
 #   workspace_id = azurerm_log_analytics_workspace.secops.id
 # }
 
-provider "azurerm" {
-  features {}
-  alias           = "devops"
-  subscription_id = var.devops_subscription_id
+resource "azurerm_key_vault" "secops" {
+  name                            = "kv${local.resource_name_unique}"
+  location                        = azurerm_resource_group.secops.location
+  resource_group_name             = azurerm_resource_group.secops.name
+  enabled_for_disk_encryption     = true
+  enabled_for_deployment          = true
+  enabled_for_template_deployment = true
+  tenant_id                       = data.azurerm_client_config.current.tenant_id
+  soft_delete_retention_days      = 90
+  purge_protection_enabled        = false
+  sku_name                        = "standard"
+
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = data.azurerm_client_config.current.object_id
+
+    certificate_permissions = [
+      "Backup",
+      "Create",
+      "Delete",
+      "DeleteIssuers",
+      "Get",
+      "GetIssuers",
+      "Import",
+      "List",
+      "ListIssuers",
+      "ManageContacts",
+      "ManageIssuers",
+      "Purge",
+      "Recover",
+      "Restore",
+      "SetIssuers",
+      "Update"
+    ]
+
+    key_permissions = [
+      "Backup",
+      "Create",
+      "Decrypt",
+      "Delete",
+      "Encrypt",
+      "Get",
+      "Import",
+      "List",
+      "Purge",
+      "Recover",
+      "Restore",
+      "Sign",
+      "UnwrapKey",
+      "Update",
+      "Verify",
+      "WrapKey"
+    ]
+
+    secret_permissions = [
+      "Backup",
+      "Delete",
+      "Get",
+      "List",
+      "Purge",
+      "Recover",
+      "Restore",
+      "Set"
+    ]
+
+    storage_permissions = [
+      "Backup",
+      "Delete",
+      "DeleteSAS",
+      "Get",
+      "GetSAS",
+      "List",
+      "ListSAS",
+      "Purge",
+      "Recover",
+      "RegenerateKey",
+      "Restore",
+      "Set",
+      "SetSAS",
+      "Update"
+    ]
+  }
 }
 
-data "azurerm_key_vault" "devops" {
-  provider            = azurerm.devops
-  name                = var.devops_keyvault_name
-  resource_group_name = var.devops_keyvault_rg_name
-}
 
 #tfsec:ignore:azure-keyvault-ensure-secret-expiry
 resource "azurerm_key_vault_secret" "secops_law_workspace_id" {
-  provider     = azurerm.devops
   name         = "secops-law-workspace-id"
   value        = azurerm_log_analytics_workspace.secops.workspace_id
-  key_vault_id = data.azurerm_key_vault.devops.id
+  key_vault_id = azurerm_key_vault.secops.id
   content_type = "plaintext"
 }
 
 
 #tfsec:ignore:azure-keyvault-ensure-secret-expiry
 resource "azurerm_key_vault_secret" "secops_law_workspace_key" {
-  provider     = azurerm.devops
   name         = "secops-law-workspace-key"
   value        = azurerm_log_analytics_workspace.secops.primary_shared_key
-  key_vault_id = data.azurerm_key_vault.devops.id
+  key_vault_id = azurerm_key_vault.secops.id
   content_type = "plaintext"
 }

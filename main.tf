@@ -16,7 +16,7 @@ data "azurerm_subscriptions" "available" {}
 
 module "enterprise_scale" {
   source  = "Azure/caf-enterprise-scale/azurerm"
-  version = "2.0.2"
+  version = "2.1.2"
 
   providers = {
     azurerm              = azurerm

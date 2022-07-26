@@ -1,21 +1,21 @@
 variable "root_id" {
   type        = string
-  description = "(optional) describe your variable"
+  description = "This is the 2-3 character identifier which will be used in naming your management group ids. This value cannot be modified once deployed."
 }
 
 variable "root_name" {
   type        = string
-  description = "(optional) describe your variable"
+  description = "This is the display name for your root management group. This value can be modified after deployment."
 }
 
 variable "default_location" {
   type        = string
-  description = "(optional) describe your variable"
+  description = "This is the default Azure region where resoruces related to management groups, policy definitions, and policy assignments will be deployed into."
 }
 
 variable "allowed_locations" {
   type        = list(string)
-  description = "(optional) describe your variable"
+  description = "(Optional) This is a list of approved locations for resource deployments which will then be passed into a policy assignment parameter."
   default = [
     "centralus",
     "eastus",
@@ -31,7 +31,7 @@ variable "allowed_locations" {
 
 variable "allowed_resources" {
   type        = list(string)
-  description = "(optional) describe your variable"
+  description = "(Optional) This is a list of approved resources for deployment which will then be passed into a policy assignment parameter."
   default = [
     "Microsoft.Compute/availabilitySets",
     "Microsoft.Compute/cloudServices",
@@ -159,7 +159,7 @@ variable "allowed_resources" {
 
 variable "allowed_vm_extensions" {
   type        = list(string)
-  description = "(optional) describe your variable"
+  description = "(Optional) This is a list of approved VM extensions which will then be passed into a policy assignment parameter."
   default = [
     "AzureDiskEncryption",
     "AzureDiskEncryptionForLinux",
@@ -185,47 +185,47 @@ variable "allowed_vm_extensions" {
 
 variable "connectivity_subs" {
   type        = list(string)
-  description = "(optional) describe your variable"
+  description = "(Optional) List of subscriptions to be nested under the Connectivity management group"
 }
 
 variable "landing_zone_subs" {
   type        = list(string)
-  description = "(optional) describe your variable"
+  description = "(Optional) List of subscriptions to be nested under the Connectivity management group"
 }
 
 variable "sde_hipaa_subs" {
   type        = list(string)
-  description = "(optional) describe your variable"
+  description = "(Optional) List of subscriptions to be nested under the Connectivity management group"
 }
 
 variable "sde_nist_subs" {
   type        = list(string)
-  description = "(optional) describe your variable"
+  description = "(Optional) List of subscriptions to be nested under the Connectivity management group"
 }
 
 variable "sandbox_subs" {
   type        = list(string)
-  description = "(optional) describe your variable"
+  description = "(Optional) List of subscriptions to be nested under the Connectivity management group"
 }
 
 variable "platform_subs" {
   type        = list(string)
-  description = "(optional) describe your variable"
+  description = "(Optional) List of subscriptions to be nested under the Connectivity management group"
 }
 
 variable "management_subs" {
   type        = list(string)
-  description = "(optional) describe your variable"
+  description = "(Optional) List of subscriptions to be nested under the Connectivity management group"
 }
 
 variable "identity_subs" {
   type        = list(string)
-  description = "(optional) describe your variable"
+  description = "(Optional) List of subscriptions to be nested under the Connectivity management group"
 }
 
 variable "restricted_subs" {
   type        = list(string)
-  description = "(optional) describe your variable"
+  description = "(Optional) List of subscriptions to be nested under the Connectivity management group"
 }
 
 variable "tags" {
@@ -244,16 +244,4 @@ variable "azure_defender_contact" {
     phone = string
   })
   description = "Azure Defender contact information"
-}
-
-variable "devops_subscription_id" {
-  type = string
-}
-
-variable "devops_keyvault_name" {
-  type = string
-}
-
-variable "devops_keyvault_rg_name" {
-  type = string
 }
