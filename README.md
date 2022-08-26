@@ -447,7 +447,7 @@ module "enterprise_scale" {
 
 Since I modified my `lib` directory and overwritten the `root` module with my own implementation, I'll need to head out to the repo and make sure I am also updating the base definitions as things may have changed with the latest release.
 
-In the source repo, you can dig into the `lib` directory and and drill in until you get to the `[archetype_definition_es_root.tmpl.json](https://github.com/Azure/terraform-azurerm-caf-enterprise-scale/blob/main/modules/archetypes/lib/archetype_definitions/archetype_definition_es_root.tmpl.json)` file. It is in the `modules/archetypes/lib/archetype_definitions` directory.
+In the source repo, you can dig into the `lib` directory and and drill in until you get to the [archetype_definition_es_root.tmpl.json](https://github.com/Azure/terraform-azurerm-caf-enterprise-scale/blob/main/modules/archetypes/lib/archetype_definitions/archetype_definition_es_root.tmpl.json) file. It is in the `modules/archetypes/lib/archetype_definitions` directory.
 
 Open the [file](https://github.com/Azure/terraform-azurerm-caf-enterprise-scale/blob/main/modules/archetypes/lib/archetype_definitions/archetype_definition_es_root.tmpl.json) and copy the contents inside the `policy_assignments` array to your clipboard.
 
